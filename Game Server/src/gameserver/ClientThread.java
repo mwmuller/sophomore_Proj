@@ -54,6 +54,7 @@ public class ClientThread extends JFrame implements Runnable {
                     game_serv.echo_chat(this, s_mess, "c");
                 } catch (Exception e) {
                     System.out.println(Username + " Disconnected");
+                    game_serv.echo_chat(this, Username + " has disconnected.\n", "j");
                     System.out.println(e);
                     break;
                 }

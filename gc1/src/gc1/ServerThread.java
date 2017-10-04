@@ -7,10 +7,12 @@ package gc1;
 
 import java.io.*;
 import java.net.*;
+import javax.swing.text.*;
 import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 
 /**
  *
@@ -25,11 +27,11 @@ public class ServerThread extends JFrame implements Runnable {
     private BufferedReader in, from_server;
     private DataOutput to_server;
     // variables for the GUI
-    protected JTextArea game_text, chat_text;
-    protected JTextField game_command, chat_message;
+    protected JTextArea game_text, chat_text, chat_message, game_command;
     protected JButton send_command, send_message;
-    protected JLabel game_lbl, chat_lbl;
-    protected JPanel West, South, North, East;
+    protected JLabel game_lbl, chat_lbl, spacer_lbl_recieve, spacer_lbl_send;
+    protected JPanel Center, South;
+    protected JScrollPane scroll_chat, scroll_game, scroll_send_command, scroll_send_message;
 
     public ServerThread(Socket sock, String user_nm) {
         server_thread = new Thread(this);
@@ -38,6 +40,7 @@ public class ServerThread extends JFrame implements Runnable {
     }
 
     public ServerThread(int width, int height, String title) {
+        DefaultCaret caret;
         // create the window and its properties
         this.setSize(width, height);
         this.setResizable(false);
@@ -45,24 +48,54 @@ public class ServerThread extends JFrame implements Runnable {
         this.setTitle("Game and Chat Hub");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // defining the different compnents of the JFrame
-        game_text = new JTextArea(15, 40);
+        //Text areas and scrolling capability
+        game_text = new JTextArea(15, 41);
         game_text.setEditable(false);
-        chat_text = new JTextArea(15, 30);
+        game_text.setLineWrap(true);
+        caret = (DefaultCaret) game_text.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        scroll_game = new JScrollPane(game_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        chat_text = new JTextArea(15, 33);
         chat_text.setEditable(false);
-        chat_lbl = new JLabel("I AM HERE");
+        chat_text.setLineWrap(true);
+        caret = (DefaultCaret) chat_text.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        scroll_chat = new JScrollPane(chat_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        chat_message = new JTextArea(3, 27);
+        caret = (DefaultCaret) chat_message.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        scroll_send_message = new JScrollPane(chat_message, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        chat_message.setLineWrap(true);
+        game_command = new JTextArea(3, 35);
+        caret = (DefaultCaret) game_command.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        scroll_send_command = new JScrollPane(game_command, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        game_command.setLineWrap(true);
+        // Spacers
+        spacer_lbl_recieve = new JLabel("       ");
+        spacer_lbl_send = new JLabel("         ");
+        // adding buttons
+        send_command = new JButton("Send");
+        send_message = new JButton("Send");
         // Jpanels needed
-        West = new JPanel();
         South = new JPanel();
-        North = new JPanel();
-        East = new JPanel();
+        Center = new JPanel();
         // adding components to the Jpanels
-        West.add(game_text);
-        East.add(chat_text);
+        // North components
+        Center.add(scroll_game);
+        Center.add(spacer_lbl_recieve);
+        Center.add(scroll_chat);
+        // South panel components
+        South.add(send_command);
+        South.add(scroll_send_command); // Jscrolling for the game command text area
+        South.add(spacer_lbl_send);
+        South.add(send_message);
+        South.add(scroll_send_message); // JScrolling for the chat message window
 
         // West.add(chat_lbl);
         // adding the panels to the JFrame
-        this.add(West, BorderLayout.WEST);
-        this.add(East, BorderLayout.EAST);
+        this.add(South, BorderLayout.SOUTH);
+        this.add(Center, BorderLayout.CENTER);
         this.setVisible(true);
     }
 

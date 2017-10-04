@@ -7,7 +7,7 @@ package gc;
 
 import java.net.*;
 
-class GameClient {
+class Gc {
 
     private static Socket socket;
     private static ServerThread serv_thread;
