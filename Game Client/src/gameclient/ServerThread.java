@@ -18,7 +18,7 @@ import javax.swing.text.DefaultCaret;
  *
  * @author mike
  */
-public class ServerThread extends JFrame implements Runnable {
+public class ServerThread extends JFrame implements Runnable, ActionListener {
 
     // variables for the thread
     private Thread server_thread;
@@ -36,10 +36,11 @@ public class ServerThread extends JFrame implements Runnable {
     public ServerThread(Socket sock, String user_nm) {
         server_thread = new Thread(this);
         serv_socket = sock;
-        Messages();
+        ChatGui(900, 320, "Game and Chat Hub");
+        Enter_nm();
     }
 
-    public ServerThread(int width, int height, String title) {
+    public void ChatGui(int width, int height, String title) {
         DefaultCaret caret;
         // create the window and its properties
         this.setSize(width, height);
@@ -49,7 +50,7 @@ public class ServerThread extends JFrame implements Runnable {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // defining the different compnents of the JFrame
         //Text areas and scrolling capability
-        game_text = new JTextArea(15, 41);
+        game_text = new JTextArea(15, 42);
         game_text.setEditable(false);
         game_text.setLineWrap(true);
         caret = (DefaultCaret) game_text.getCaret();
@@ -72,11 +73,13 @@ public class ServerThread extends JFrame implements Runnable {
         scroll_send_command = new JScrollPane(game_command, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         game_command.setLineWrap(true);
         // Spacers
-        spacer_lbl_recieve = new JLabel("       ");
+        spacer_lbl_recieve = new JLabel("        ");
         spacer_lbl_send = new JLabel("         ");
         // adding buttons
         send_command = new JButton("Send");
         send_message = new JButton("Send");
+        send_command.addActionListener(this);
+        send_message.addActionListener(this);
         // Jpanels needed
         South = new JPanel();
         Center = new JPanel();
@@ -97,16 +100,21 @@ public class ServerThread extends JFrame implements Runnable {
         this.add(South, BorderLayout.SOUTH);
         this.add(Center, BorderLayout.CENTER);
         this.setVisible(true);
+        chat_message.requestFocus();
+        if(chat_message.isFocusOwner()){
+        this.getRootPane().setDefaultButton(send_message);
+        }else if(game_command.isFocusOwner()){
+            this.getRootPane().setDefaultButton(send_command);
+        }
     }
 
-    public void Messages() {
-        String message;
+    public void Enter_nm() {
         try {
             to_server = new DataOutputStream(serv_socket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(System.in));
 
             while (Username.equals("")) {
-                System.out.println("Please enter a username for the chat: ");
+                chat_text.append("Please enter a username for the chat: ");
                 Username = in.readLine();
             }
             to_server.writeBytes(Username + "\n");
@@ -117,22 +125,37 @@ public class ServerThread extends JFrame implements Runnable {
             System.out.println(e);
         }
         System.out.println("Welcome to the Chat!");
-        while (true) {
-            try {
-                message = in.readLine();
-                if (message.equals("END")) {
-                    serv_socket.close();
-                    break;
-                }
-                to_server.writeBytes(message + "\n");
-            } catch (Exception e) {
-                System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
-                System.out.println(e);
-                System.exit(-1);
-            }
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String message;
+        System.out.println(e.getActionCommand());
+        if (e.getSource().equals(send_command)) {
+
+        } else if (e.getSource().equals(send_message)) {
+            send_message_func();
         }
     }
 
+    public void send_message_func() {
+        String message;
+        try {
+            if (chat_message.getText().equals("END")) {
+                serv_socket.close();
+            }
+            message = chat_message.getText();
+            chat_text.append("\n" + message);
+            to_server.writeBytes(message + "\n");
+            chat_message.setText("");
+        } catch (Exception e) {
+            System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
+            System.out.println(e);
+        }
+    }
+
+    @Override
     public void run() {
         String s_mess;
         try {
@@ -144,6 +167,7 @@ public class ServerThread extends JFrame implements Runnable {
         while (true) {
             try {
                 s_mess = from_server.readLine();
+                chat_text.append("\n" + s_mess);
                 System.out.println(s_mess);
             } catch (Exception e) {
                 System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");

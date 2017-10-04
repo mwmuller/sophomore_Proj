@@ -16,7 +16,6 @@ class Gc1 {
 
         try {
             socket = new Socket("localhost", 1234);
-            serv_thread = new ServerThread(900, 500, "Game and Chat Hub");
             serv_thread = new ServerThread(socket, "");
         } catch (Exception e) {
             System.out.println("There was an issue using the current port.");
