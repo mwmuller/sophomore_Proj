@@ -5,19 +5,23 @@
  */
 package gameserver;
 
+import java.awt.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 /**
  *
  * @author Michael Muller
  */
-public class ClientThread extends GameServer implements Runnable {
+public class ClientThread extends JFrame implements Runnable {
 
     private Socket Cli_socket;
     private String Username;
     private Thread client_thread;
+    private GameServer game_serv = new GameServer();
 
     ClientThread(Socket sock, String user_nm) { // populated
         this.Cli_socket = sock;
@@ -41,13 +45,13 @@ public class ClientThread extends GameServer implements Runnable {
             BufferedReader from_client = new BufferedReader(new InputStreamReader(Cli_socket.getInputStream()));
             Username = from_client.readLine();
             System.out.println(Username + " has connected!");
-            echo_chat(this, Username + " has joined the Chat\n", "j");
+            game_serv.echo_chat(this, Username + " has joined the Chat\n", "j");
             while (true) { // handles the constant chat until they disconnect
                 try {
                     c_mess = from_client.readLine();
                     System.out.println(Username + ": " + c_mess);
                     s_mess = c_mess + "\n";
-                    echo_chat(this, s_mess, "c");
+                    game_serv.echo_chat(this, s_mess, "c");
                 } catch (Exception e) {
                     System.out.println(Username + " Disconnected");
                     System.out.println(e);

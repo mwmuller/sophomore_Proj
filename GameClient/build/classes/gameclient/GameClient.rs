@@ -1,2 +1,0 @@
-cseserver.CSEServer
-gameclient.CSEServer
