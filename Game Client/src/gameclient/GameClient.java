@@ -5,6 +5,7 @@
  */
 package gameclient;
 
+import javax.swing.*;
 import java.net.*;
 
 class GameClient {
@@ -15,8 +16,9 @@ class GameClient {
     public static void main(String[] args) throws Exception {
 
         try {
+            String username = JOptionPane.showInputDialog("Please enter a username for the chat.");
             socket = new Socket("localhost", 1234);
-            serv_thread = new ServerThread(socket, "");
+            serv_thread = new ServerThread(socket, username);
         } catch (Exception e) {
             System.out.println("There was an issue using the current port.");
             System.out.println(e);
