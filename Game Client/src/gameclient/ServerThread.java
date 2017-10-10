@@ -33,12 +33,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     protected JPanel Center, South;
     protected JScrollPane scroll_chat, scroll_game, scroll_send_command, scroll_send_message;
 
-    public ServerThread(Socket sock, String user_nm) throws IOException{
-        server_thread = new Thread(this);
-        serv_socket = sock;
+    public ServerThread(Socket sock, String user_nm) throws IOException {
         Username = user_nm;
-        to_server = new DataOutputStream(serv_socket.getOutputStream());
-        to_server.writeBytes(user_nm + "\n");
+        server_thread = new Thread(this);
+        server_thread.start();
+        serv_socket = sock;
         ChatGui(900, 320, "Game and Chat Hub");
     }
 
@@ -103,14 +102,13 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         this.add(Center, BorderLayout.CENTER);
         this.setVisible(true);
         chat_message.requestFocus();
-        if(chat_message.isFocusOwner()){
-        this.getRootPane().setDefaultButton(send_message);
-        }else if(game_command.isFocusOwner()){
+        if (chat_message.isFocusOwner()) {
+            this.getRootPane().setDefaultButton(send_message);
+        } else if (game_command.isFocusOwner()) {
             this.getRootPane().setDefaultButton(send_command);
         }
     }
 
-    
     @Override
     public void actionPerformed(ActionEvent e) {
         String message;
@@ -142,9 +140,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     public void run() {
         String s_mess;
         try {
+            to_server = new DataOutputStream(serv_socket.getOutputStream());
             from_server = new BufferedReader(new InputStreamReader(serv_socket.getInputStream()));
+            to_server.writeBytes(Username + "\n");
         } catch (Exception ei) {
-
+            System.out.println("Not wroking");
         }
 
         while (true) {

@@ -111,6 +111,7 @@ public class GameServer {
             for (int i = 0; i < connected; i++) {
                 DataOutputStream to_client = new DataOutputStream(Clients_arr[i].get_sock().getOutputStream());
                 to_client.writeBytes(message);
+                message_box.setText("");
             }
         } else {
             for (int i = 0; i < connected; i++) {

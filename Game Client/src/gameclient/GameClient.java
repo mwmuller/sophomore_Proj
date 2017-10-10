@@ -14,9 +14,11 @@ class GameClient {
     private static ServerThread serv_thread;
 
     public static void main(String[] args) throws Exception {
-
+        String username = "";
         try {
-            String username = JOptionPane.showInputDialog("Please enter a username for the chat.");
+            while (username.equals("")) {
+                username = JOptionPane.showInputDialog("Please enter a username for the chat.");
+            }
             socket = new Socket("localhost", 1234);
             serv_thread = new ServerThread(socket, username);
         } catch (Exception e) {
