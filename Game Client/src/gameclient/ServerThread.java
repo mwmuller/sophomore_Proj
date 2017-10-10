@@ -58,6 +58,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_game = new JScrollPane(game_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_text = new JTextArea(15, 33);
+        chat_text.append("Welcome to the Chat!");
         chat_text.setEditable(false);
         chat_text.setLineWrap(true);
         caret = (DefaultCaret) chat_text.getCaret();

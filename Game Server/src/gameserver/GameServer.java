@@ -24,7 +24,8 @@ public class GameServer {
     public static void main(String[] args) throws Exception {
         String client_nm = "";
         Serv_GUI(400, 500, "Server Testing");
-        ServerSocket ssock = new ServerSocket(1234);
+        System.out.print(InetAddress.getLocalHost());
+        ServerSocket ssock = new ServerSocket(387);
         chat_area.append("Listening...\n");
         while (true) {
             if (connected <= max) {
@@ -62,14 +63,14 @@ public class GameServer {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                try{
-                if (e.getKeyCode() == KeyEvent.VK_ENTER){
-                    e.consume();
-                    echo_chat(null, "Moderator: " + message_box.getText() + "\n", "m");
-                    message_box.setText("");
-                }
-                }catch(Exception er){
-                    
+                try {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        e.consume();
+                        echo_chat(null, "Moderator: " + message_box.getText() + "\n", "m");
+                        message_box.setText("");
+                    }
+                } catch (Exception er) {
+
                 }
             }
 

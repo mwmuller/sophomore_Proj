@@ -19,7 +19,7 @@ class GameClient {
             while (username.equals("")) {
                 username = JOptionPane.showInputDialog("Please enter a username for the chat.");
             }
-            socket = new Socket("localhost", 1234);
+            socket = new Socket("192.168.43.120", 387);
             serv_thread = new ServerThread(socket, username);
         } catch (Exception e) {
             System.out.println("There was an issue using the current port.");
