@@ -24,7 +24,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     private Thread server_thread;
     private Socket serv_socket;
     private String Username = "";
-    private BufferedReader in, from_server;
+    private BufferedReader from_server;
     private DataOutput to_server;
     // variables for the GUI
     protected JTextArea game_text, chat_text, chat_message, game_command;
@@ -33,11 +33,12 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     protected JPanel Center, South;
     protected JScrollPane scroll_chat, scroll_game, scroll_send_command, scroll_send_message;
 
-    public ServerThread(Socket sock, String user_nm) {
+    public ServerThread(Socket sock, String user_nm) throws IOException {
+        Username = user_nm;
         server_thread = new Thread(this);
+        server_thread.start();
         serv_socket = sock;
         ChatGui(900, 320, "Game and Chat Hub");
-        Enter_nm();
     }
 
     public void ChatGui(int width, int height, String title) {
@@ -101,31 +102,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         this.add(Center, BorderLayout.CENTER);
         this.setVisible(true);
         chat_message.requestFocus();
-        if(chat_message.isFocusOwner()){
-        this.getRootPane().setDefaultButton(send_message);
-        }else if(game_command.isFocusOwner()){
+        if (chat_message.isFocusOwner()) {
+            this.getRootPane().setDefaultButton(send_message);
+        } else if (game_command.isFocusOwner()) {
             this.getRootPane().setDefaultButton(send_command);
         }
-    }
-
-    public void Enter_nm() {
-        try {
-            to_server = new DataOutputStream(serv_socket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(System.in));
-
-            while (Username.equals("")) {
-                chat_text.append("Please enter a username for the chat: ");
-                Username = in.readLine();
-            }
-            to_server.writeBytes(Username + "\n");
-            server_thread.start();
-            System.out.println("Connected!");
-        } catch (Exception e) {
-            // possible issue with socket
-            System.out.println(e);
-        }
-        System.out.println("Welcome to the Chat!");
-
     }
 
     @Override
@@ -159,9 +140,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     public void run() {
         String s_mess;
         try {
+            to_server = new DataOutputStream(serv_socket.getOutputStream());
             from_server = new BufferedReader(new InputStreamReader(serv_socket.getInputStream()));
+            to_server.writeBytes(Username + "\n");
         } catch (Exception ei) {
-
+            System.out.println("Not wroking");
         }
 
         while (true) {
