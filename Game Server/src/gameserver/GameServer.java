@@ -8,11 +8,12 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.event.*;
 
-public class GameServer {
+public class GameServer implements Runnable {
 
     private static int max = 100;
     private static ClientThread[] Clients_arr = new ClientThread[max];
     private static int connected = 0;
+    protected static String[] Inet_addr;
     // GUI Variables for the server
     protected static JPanel north, south;
     protected static JTextArea chat_area;
@@ -20,13 +21,17 @@ public class GameServer {
     protected static JScrollPane scroll, scroll_box;
     protected static JFrame Server_GUI = new JFrame();
     protected static JTextArea message_box;
+    protected static byte[] buffer = new byte[1500];
 
     public static void main(String[] args) throws Exception {
         String client_nm = "";
         Serv_GUI(400, 500, "Server Testing");
-        System.out.print(InetAddress.getLocalHost());
+        Inet_addr = InetAddress.getLocalHost().toString().split("/");
+        System.out.print(Inet_addr[1]);
         ServerSocket ssock = new ServerSocket(387);
+        chat_area.append("Hosting at address: " + Inet_addr[1] + "\n");
         chat_area.append("Listening...\n");
+        
         while (true) {
             if (connected <= max) {
                 Socket Cli_sock = ssock.accept();
@@ -34,6 +39,10 @@ public class GameServer {
                 connected++;
             }
         }
+    }
+
+    public void run() { // going to be used for UDP connections
+
     }
 
     public static void Serv_GUI(int height, int width, String title) {
