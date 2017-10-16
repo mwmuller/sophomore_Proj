@@ -65,6 +65,27 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_chat = new JScrollPane(chat_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_message = new JTextArea(3, 27);
+        chat_message.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                try {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        e.consume();
+                        send_message_func();
+                    }
+                } catch (Exception er) {
+
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
         caret = (DefaultCaret) chat_message.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_send_message = new JScrollPane(chat_message, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -113,9 +134,8 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String message;
-        System.out.println(e.getActionCommand());
         if (e.getSource().equals(send_command)) {
-
+            send_command_func();
         } else if (e.getSource().equals(send_message)) {
             send_message_func();
         }
@@ -124,9 +144,6 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     public void send_message_func() {
         String message;
         try {
-            if (chat_message.getText().equals("END")) {
-                serv_socket.close();
-            }
             message = chat_message.getText();
             chat_text.append("\n" + message);
             to_server.writeBytes(message + "\n");
@@ -136,7 +153,15 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             System.out.println(e);
         }
     }
-
+    public void send_command_func(){
+        String command;
+        try{
+            command = game_command.getText();
+            game_text.append("\n" + command);
+        }catch(Exception e){
+            
+        }
+    }
     @Override
     public void run() {
         String s_mess;
@@ -152,7 +177,6 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             try {
                 s_mess = from_server.readLine();
                 chat_text.append("\n" + s_mess);
-                System.out.println(s_mess);
             } catch (Exception e) {
                 System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
                 System.out.println(e);
