@@ -24,12 +24,12 @@ public class GameServer {
     public static void main(String[] args) throws Exception {
         String client_nm = "";
         Serv_GUI(400, 500, "Server Testing");
-        System.out.print(InetAddress.getLocalHost());
-        ServerSocket ssock = new ServerSocket(387);
+        // IP for Oakland is 35.50.16.43
+        DatagramSocket ssock = new DatagramSocket(387);
         chat_area.append("Listening...\n");
         while (true) {
             if (connected <= max) {
-                Socket Cli_sock = ssock.accept();
+               Socket Cli_sock = ssock.
                 Clients_arr[connected] = new ClientThread(Cli_sock, client_nm);
                 connected++;
             }
