@@ -148,6 +148,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 
     public void send_message_func() {
         String message;
+        send_data = new byte[1500];
         try {
             message = chat_message.getText();
             send_data = message.getBytes();
@@ -174,7 +175,6 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     @Override
     public void run() {
         String s_mess;
-        rec_pack = new DatagramPacket(rec_data, rec_data.length);
         try {
             send_data = Username.getBytes();
             send_pack = new DatagramPacket(send_data, send_data.length, serv_ip, port);
@@ -185,6 +185,8 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 
         while (true) {
             try {
+                rec_data = new byte[1500];
+                rec_pack = new DatagramPacket(rec_data, rec_data.length);
                 serv_socket.receive(rec_pack);
                 s_mess = new String(rec_pack.getData());
                 chat_text.append("\n" + s_mess);

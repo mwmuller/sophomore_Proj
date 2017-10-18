@@ -45,9 +45,14 @@ public class GameServer {
             }
         }
     }
+
     public static void get_username_packet() throws IOException {
+        buffer = new byte[1500];
+        int count = 2;
         rec_pack = new DatagramPacket(buffer, buffer.length);
-        ssock.receive(rec_pack);
+        while (count < 3 ) {
+            ssock.receive(rec_pack);
+        }
         client_ip = rec_pack.getAddress();
         String connected = new String(rec_pack.getData());
         chat_area.append(connected + " has connected to the chat!\n");

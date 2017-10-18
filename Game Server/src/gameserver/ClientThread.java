@@ -40,7 +40,7 @@ public class ClientThread extends JFrame implements Runnable {
     public String get_usernm() {
         return Username;
     }
-
+    @Override
     public void run() {
         String c_mess, s_mess;
         try {
@@ -51,6 +51,7 @@ public class ClientThread extends JFrame implements Runnable {
             game_serv.echo_chat(this, Username + " has joined the Chat\n", "j");
             while (true) { // handles the constant chat until they disconnect
                 try {
+                    rec_data = new byte[1500];
                     rec_pack = new DatagramPacket(rec_data, rec_data.length);
                     Cli_socket.receive(rec_pack);
                     c_mess = new String(rec_pack.getData());
