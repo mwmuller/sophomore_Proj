@@ -22,10 +22,13 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 
     // variables for the thread
     private Thread server_thread;
-    private Socket serv_socket;
+    private DatagramSocket serv_socket;
     private String Username = "";
-    private BufferedReader from_server;
-    private DataOutput to_server;
+    private int port;
+    protected DatagramPacket rec_pack, send_pack;
+    protected byte[] send_data = new byte[1500];
+    protected byte[] rec_data = new byte[1500];
+    protected InetAddress serv_ip;
     // variables for the GUI
     protected JTextArea game_text, chat_text, chat_message, game_command;
     protected JButton send_command, send_message;
@@ -33,8 +36,10 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     protected JPanel Center, South;
     protected JScrollPane scroll_chat, scroll_game, scroll_send_command, scroll_send_message;
 
-    public ServerThread(Socket sock, String user_nm) throws IOException {
+    public ServerThread(DatagramSocket sock, String user_nm, InetAddress ip_addr, int port) throws IOException {
         Username = user_nm;
+        this.port = port;
+        serv_ip = ip_addr;
         server_thread = new Thread(this);
         server_thread.start();
         serv_socket = sock;
@@ -145,37 +150,43 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         String message;
         try {
             message = chat_message.getText();
+            send_data = message.getBytes();
             chat_text.append("\n" + message);
-            to_server.writeBytes(message + "\n");
+            send_pack = new DatagramPacket(send_data, send_data.length, serv_ip, port);
+            serv_socket.send(send_pack);
             chat_message.setText("");
         } catch (Exception e) {
             System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
             System.out.println(e);
         }
     }
-    public void send_command_func(){
+
+    public void send_command_func() {
         String command;
-        try{
+        try {
             command = game_command.getText();
             game_text.append("\n" + command);
-        }catch(Exception e){
-            
+        } catch (Exception e) {
+
         }
     }
+
     @Override
     public void run() {
         String s_mess;
+        rec_pack = new DatagramPacket(rec_data, rec_data.length);
         try {
-            to_server = new DataOutputStream(serv_socket.getOutputStream());
-            from_server = new BufferedReader(new InputStreamReader(serv_socket.getInputStream()));
-            to_server.writeBytes(Username + "\n");
+            send_data = Username.getBytes();
+            send_pack = new DatagramPacket(send_data, send_data.length, serv_ip, port);
+            serv_socket.send(send_pack);
         } catch (Exception ei) {
             System.out.println("Not wroking");
         }
 
         while (true) {
             try {
-                s_mess = from_server.readLine();
+                serv_socket.receive(rec_pack);
+                s_mess = new String(rec_pack.getData());
                 chat_text.append("\n" + s_mess);
             } catch (Exception e) {
                 System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
