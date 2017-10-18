@@ -16,7 +16,7 @@ class GameClient {
     public static void main(String[] args) throws Exception {
         String username = "";
         try {
-            while (username.equals("")) {
+            while (username.equals("") || username.length() < 3) {
                 username = JOptionPane.showInputDialog("Please enter a username for the chat.");
             }
             socket = new Socket("localhost", 387);

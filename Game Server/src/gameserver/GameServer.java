@@ -15,7 +15,7 @@ public class GameServer implements Runnable {
     private static int connected = 0;
     protected static String[] Inet_addr;
     // GUI Variables for the server
-    protected static JPanel north, south;
+    protected static JPanel west, south, east;
     protected static JTextArea chat_area;
     protected static JButton send_message;
     protected static JScrollPane scroll, scroll_box;
@@ -75,6 +75,7 @@ public class GameServer implements Runnable {
                 try {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         e.consume();
+                        //if()
                         echo_chat(null, "Moderator: " + message_box.getText() + "\n", "m");
                         message_box.setText("");
                     }
@@ -100,12 +101,12 @@ public class GameServer implements Runnable {
                 }
             }
         });
-        north = new JPanel();
+        west = new JPanel();
         south = new JPanel();
-        north.add(scroll);
+        west.add(scroll);
         south.add(send_message);
         south.add(scroll_box);
-        Server_GUI.add(north, BorderLayout.NORTH);
+        Server_GUI.add(west, BorderLayout.WEST);
         Server_GUI.add(south, BorderLayout.SOUTH);
         Server_GUI.setVisible(true);
 
