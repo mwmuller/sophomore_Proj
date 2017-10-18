@@ -38,21 +38,21 @@ public class GameServer {
         chat_area.append("Hosting at address: " + Inet_addr[1] + "\n");
         chat_area.append("Listening...\n");
         while (true) {
-            if (connected <= max) {
+            if (connected < max) {
                 get_username_packet();
                 Clients_arr[connected] = new ClientThread(client_ip, client_nm);
                 connected++;
+            } else {
+                message_box.append("Max Clients Reached." + "\n");
             }
         }
     }
 
     public static void get_username_packet() throws IOException {
         buffer = new byte[1500];
-        int count = 2;
         rec_pack = new DatagramPacket(buffer, buffer.length);
-        while (count < 3 ) {
-            ssock.receive(rec_pack);
-        }
+        
+        ssock.receive(rec_pack);
         client_ip = rec_pack.getAddress();
         String connected = new String(rec_pack.getData());
         chat_area.append(connected + " has connected to the chat!\n");
@@ -126,6 +126,7 @@ public class GameServer {
     }
 
     public static void echo_chat(ClientThread client, String message, String joined_chat) throws IOException {
+        send_data = new byte[1500];
         if (joined_chat.equals("c")) {
             chat_area.append(client.get_usernm() + ": " + message);
         } else {
@@ -134,7 +135,7 @@ public class GameServer {
         if (joined_chat.equals("m")) {
             for (int i = 0; i < connected; i++) {
                 send_data = message.getBytes();
-                send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
+                send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 377);
                 ssock.send(send_pack);
                 message_box.setText("");
             }
@@ -144,11 +145,11 @@ public class GameServer {
                     try {
                         if (joined_chat.equals("c")) {
                             send_data = (client.get_usernm() + ": " + message).getBytes();
-                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
+                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 377);
                             ssock.send(send_pack);
                         } else {
                             send_data = message.getBytes();
-                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
+                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 377);
                             ssock.send(send_pack);
                         }
                     } catch (Exception e) {

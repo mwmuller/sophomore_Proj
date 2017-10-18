@@ -29,7 +29,7 @@ class GameClient {
                 ip = JOptionPane.showInputDialog("Please enter the IP Address of the Server you wish to connect to.");
                 try {
                     serv_inet = InetAddress.getByName(ip);
-                    send = username.getBytes();
+                    send = (username).getBytes();
                     usernm_send = new DatagramPacket(send, send.length, serv_inet, port);
 
                 } catch (Exception e) {
@@ -37,7 +37,7 @@ class GameClient {
                 }
             }
             InetAddress my_addr = InetAddress.getLocalHost();
-            client_socket = new DatagramSocket();
+            client_socket = new DatagramSocket(377);
             client_socket.send(usernm_send);
             client_socket.connect(serv_inet, port);
             serv_thread = new ServerThread(client_socket, username, serv_inet, port);
