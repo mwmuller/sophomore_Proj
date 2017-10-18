@@ -18,20 +18,23 @@ import javax.swing.*;
  */
 public class ClientThread extends JFrame implements Runnable {
 
-    private Socket Cli_socket;
+    private DatagramSocket Cli_socket;
+    private DatagramPacket rec_pack;
+    protected InetAddress client_ip;
+    protected byte[] rec_data = new byte[1500];
     private String Username;
     private Thread client_thread;
     private GameServer game_serv = new GameServer();
 
-    ClientThread(Socket sock, String user_nm) { // populated
-        this.Cli_socket = sock;
-        this.Username = user_nm;
+    ClientThread(InetAddress ip, String user_nm) { // populated
+        client_ip = ip;
+        Username = user_nm;
         client_thread = new Thread(this);
         client_thread.start();
     }
 
-    public Socket get_sock() {
-        return Cli_socket;
+    public InetAddress get_ip() {
+        return client_ip;
     }
 
     public String get_usernm() {
@@ -41,14 +44,16 @@ public class ClientThread extends JFrame implements Runnable {
     public void run() {
         String c_mess, s_mess;
         try {
-            DataOutputStream to_client = new DataOutputStream(Cli_socket.getOutputStream());
-            BufferedReader from_client = new BufferedReader(new InputStreamReader(Cli_socket.getInputStream()));
-            Username = from_client.readLine();
+            rec_pack = new DatagramPacket(rec_data, rec_data.length);
+            Cli_socket.receive(rec_pack);
+            Username = new String(rec_pack.getData());
             System.out.println(Username + " has connected!");
             game_serv.echo_chat(this, Username + " has joined the Chat\n", "j");
             while (true) { // handles the constant chat until they disconnect
                 try {
-                    c_mess = from_client.readLine();
+                    rec_pack = new DatagramPacket(rec_data, rec_data.length);
+                    Cli_socket.receive(rec_pack);
+                    c_mess = new String(rec_pack.getData());
                     System.out.println(Username + ": " + c_mess);
                     s_mess = c_mess + "\n";
                     game_serv.echo_chat(this, s_mess, "c");

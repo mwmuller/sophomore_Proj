@@ -8,12 +8,16 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.event.*;
 
-public class GameServer implements Runnable {
+public class GameServer {
 
     private static int max = 100;
     private static ClientThread[] Clients_arr = new ClientThread[max];
     private static int connected = 0;
     protected static String[] Inet_addr;
+    protected static DatagramPacket rec_pack, send_pack;
+    protected static DatagramSocket ssock;
+    protected static InetAddress client_ip;
+    protected Thread game_thread;
     // GUI Variables for the server
     protected static JPanel north, south;
     protected static JTextArea chat_area;
@@ -22,32 +26,31 @@ public class GameServer implements Runnable {
     protected static JFrame Server_GUI = new JFrame();
     protected static JTextArea message_box;
     protected static byte[] buffer = new byte[1500];
+    protected static byte[] send_data = new byte[1500];
 
     public static void main(String[] args) throws Exception {
         String client_nm = "";
         Serv_GUI(400, 500, "Server Testing");
-<<<<<<< HEAD
-        // IP for Oakland is 35.50.16.43
-        DatagramSocket ssock = new DatagramSocket(387);
-=======
+        ssock = new DatagramSocket(387);
         Inet_addr = InetAddress.getLocalHost().toString().split("/");
         System.out.print(Inet_addr[1]);
-        ServerSocket ssock = new ServerSocket(387);
+        //ServerSocket ssock = new ServerSocket(387);
         chat_area.append("Hosting at address: " + Inet_addr[1] + "\n");
->>>>>>> 0871b9ca90be39786b541f366ea3462ae3b6e1db
         chat_area.append("Listening...\n");
-        
         while (true) {
             if (connected <= max) {
-               Socket Cli_sock = ssock.
-                Clients_arr[connected] = new ClientThread(Cli_sock, client_nm);
+                get_username_packet();
+                Clients_arr[connected] = new ClientThread(client_ip, client_nm);
                 connected++;
             }
         }
     }
-
-    public void run() { // going to be used for UDP connections
-
+    public static void get_username_packet() throws IOException {
+        rec_pack = new DatagramPacket(buffer, buffer.length);
+        ssock.receive(rec_pack);
+        client_ip = rec_pack.getAddress();
+        String connected = new String(rec_pack.getData());
+        chat_area.append(connected + " has connected to the chat!\n");
     }
 
     public static void Serv_GUI(int height, int width, String title) {
@@ -124,19 +127,23 @@ public class GameServer implements Runnable {
         }
         if (joined_chat.equals("m")) {
             for (int i = 0; i < connected; i++) {
-                DataOutputStream to_client = new DataOutputStream(Clients_arr[i].get_sock().getOutputStream());
-                to_client.writeBytes(message);
+                send_data = message.getBytes();
+                send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
+                ssock.send(send_pack);
                 message_box.setText("");
             }
         } else {
             for (int i = 0; i < connected; i++) {
                 if (!client.equals(Clients_arr[i])) {
                     try {
-                        DataOutputStream to_client = new DataOutputStream(Clients_arr[i].get_sock().getOutputStream());
                         if (joined_chat.equals("c")) {
-                            to_client.writeBytes(client.get_usernm() + ": " + message);
+                            send_data = (client.get_usernm() + ": " + message).getBytes();
+                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
+                            ssock.send(send_pack);
                         } else {
-                            to_client.writeBytes(message);
+                            send_data = message.getBytes();
+                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
+                            ssock.send(send_pack);
                         }
                     } catch (Exception e) {
                         //System.out.println(e);
