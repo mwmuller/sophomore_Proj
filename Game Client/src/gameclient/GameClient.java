@@ -7,15 +7,17 @@ package gameclient;
 
 import javax.swing.*;
 import java.net.*;
+import java.io.*;
 
 class GameClient {
 
-    private static DatagramSocket client_socket, test_sock;
+    private static Socket client_socket, test_sock;
     private static ServerThread serv_thread;
     private static String ip = "";
     static DatagramPacket usernm_send;
-    static byte[] buf = new byte[1024];
-    static byte[] send = new byte[1024];
+    
+//    static byte[] buf = new byte[1024];
+//    static byte[] send = new byte[1024];
     protected static InetAddress serv_inet;
 
     public static void main(String[] args) throws Exception {
@@ -29,17 +31,20 @@ class GameClient {
                 ip = JOptionPane.showInputDialog("Please enter the IP Address of the Server you wish to connect to.");
                 try {
                     serv_inet = InetAddress.getByName(ip);
-                    send = username.getBytes();
-                    usernm_send = new DatagramPacket(send, send.length, serv_inet, port);
+//                    send = username.getBytes();
+//                    usernm_send = new DatagramPacket(send, send.length, serv_inet, port);
 
                 } catch (Exception e) {
 
                 }
             }
-            InetAddress my_addr = InetAddress.getLocalHost();
-            client_socket = new DatagramSocket();
-            client_socket.send(usernm_send);
-            client_socket.connect(serv_inet, port);
+//            InetAddress my_addr = InetAddress.getLocalHost();
+//            client_socket = new DatagramSocket();
+//            client_socket.send(usernm_send);
+//            client_socket.connect(serv_inet, port);
+            client_socket = new Socket(ip, 80);
+            DataOutputStream to_serv = new DataOutputStream((client_socket.getOutputStream()));
+            to_serv.writeBytes(username + "\n");
             serv_thread = new ServerThread(client_socket, username, serv_inet, port);
         } catch (Exception e) {
             System.out.println("There was an issue using the current port.");
