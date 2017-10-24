@@ -40,28 +40,22 @@ public class GameServer {
         chat_area.append("Hosting at address: " + Inet_addr[1] + "\n");
         chat_area.append("Listening...\n");
         while (true) {
-<<<<<<< HEAD
             if (connected <= max) {
                 // get_username_packet();
                 Socket Cli_socket = ssock.accept();
                 Clients_arr[connected] = new ClientThread(Cli_socket, "");
-=======
-            if (connected < max) {
-                get_username_packet();
-                Clients_arr[connected] = new ClientThread(client_ip, client_nm);
->>>>>>> a85e579f077b22bae553109fab68b33b120bd4c6
                 connected++;
-            } else {
-                message_box.append("Max Clients Reached." + "\n");
             }
         }
     }
 
     /*  public static void get_username_packet() throws IOException {
         buffer = new byte[1500];
+        int count = 2;
         rec_pack = new DatagramPacket(buffer, buffer.length);
-        
-        ssock.receive(rec_pack);
+        while (count < 3 ) {
+            ssock.receive(rec_pack);
+        }
         client_ip = rec_pack.getAddress();
         String connected = new String(rec_pack.getData());
         chat_area.append(connected + " has connected to the chat!\n");
@@ -133,13 +127,11 @@ public class GameServer {
     }
 
     public static void echo_chat(ClientThread client, String message, String joined_chat) throws IOException {
-        send_data = new byte[1500];
         if (joined_chat.equals("c")) {
             chat_area.append(client.get_usernm() + ": " + message);
         } else {
             chat_area.append(message);
         }
-<<<<<<< HEAD
 
         for (int i = 0; i < connected; i++) {
             to_client = new DataOutputStream((Clients_arr[i].get_socket().getOutputStream()));
@@ -159,30 +151,6 @@ public class GameServer {
                         chat_area.append(message);
                     }else{
                         to_client.writeBytes(message + "\n");
-=======
-        if (joined_chat.equals("m")) {
-            for (int i = 0; i < connected; i++) {
-                send_data = message.getBytes();
-                send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 377);
-                ssock.send(send_pack);
-                message_box.setText("");
-            }
-        } else {
-            for (int i = 0; i < connected; i++) {
-                if (!client.equals(Clients_arr[i])) {
-                    try {
-                        if (joined_chat.equals("c")) {
-                            send_data = (client.get_usernm() + ": " + message).getBytes();
-                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 377);
-                            ssock.send(send_pack);
-                        } else {
-                            send_data = message.getBytes();
-                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 377);
-                            ssock.send(send_pack);
-                        }
-                    } catch (Exception e) {
-                        //System.out.println(e);
->>>>>>> a85e579f077b22bae553109fab68b33b120bd4c6
                     }
 
                 } catch (Exception e) {
