@@ -31,13 +31,19 @@ class GameClient {
                 ip = JOptionPane.showInputDialog("Please enter the IP Address of the Server you wish to connect to.");
                 try {
                     serv_inet = InetAddress.getByName(ip);
+<<<<<<< HEAD
 //                    send = username.getBytes();
 //                    usernm_send = new DatagramPacket(send, send.length, serv_inet, port);
+=======
+                    send = (username).getBytes();
+                    usernm_send = new DatagramPacket(send, send.length, serv_inet, port);
+>>>>>>> a85e579f077b22bae553109fab68b33b120bd4c6
 
                 } catch (Exception e) {
 
                 }
             }
+<<<<<<< HEAD
 //            InetAddress my_addr = InetAddress.getLocalHost();
 //            client_socket = new DatagramSocket();
 //            client_socket.send(usernm_send);
@@ -45,6 +51,12 @@ class GameClient {
             client_socket = new Socket(ip, 80);
             DataOutputStream to_serv = new DataOutputStream((client_socket.getOutputStream()));
             to_serv.writeBytes(username + "\n");
+=======
+            InetAddress my_addr = InetAddress.getLocalHost();
+            client_socket = new DatagramSocket(377);
+            client_socket.send(usernm_send);
+            client_socket.connect(serv_inet, port);
+>>>>>>> a85e579f077b22bae553109fab68b33b120bd4c6
             serv_thread = new ServerThread(client_socket, username, serv_inet, port);
         } catch (Exception e) {
             System.out.println("There was an issue using the current port.");

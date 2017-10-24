@@ -22,10 +22,13 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 
     // variables for the thread
     private Thread server_thread;
-    private Socket serv_socket;
+    private DatagramSocket serv_socket;
     private String Username = "";
-    private BufferedReader in, from_server;
-    private DataOutput to_server;
+    private int port;
+    protected DatagramPacket rec_pack, send_pack;
+    protected byte[] send_data = new byte[1500];
+    protected byte[] rec_data = new byte[1500];
+    protected InetAddress serv_ip;
     // variables for the GUI
     protected JTextArea game_text, chat_text, chat_message, game_command;
     protected JButton send_command, send_message;
@@ -33,11 +36,14 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     protected JPanel Center, South;
     protected JScrollPane scroll_chat, scroll_game, scroll_send_command, scroll_send_message;
 
-    public ServerThread(Socket sock, String user_nm) {
+    public ServerThread(DatagramSocket sock, String user_nm, InetAddress ip_addr, int port) throws IOException {
+        Username = user_nm;
+        this.port = port;
+        serv_ip = ip_addr;
         server_thread = new Thread(this);
+        server_thread.start();
         serv_socket = sock;
         ChatGui(900, 320, "Game and Chat Hub");
-        Enter_nm();
     }
 
     public void ChatGui(int width, int height, String title) {
@@ -57,12 +63,34 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_game = new JScrollPane(game_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_text = new JTextArea(15, 33);
+        chat_text.append("Welcome to the Chat!\n");
         chat_text.setEditable(false);
         chat_text.setLineWrap(true);
         caret = (DefaultCaret) chat_text.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_chat = new JScrollPane(chat_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_message = new JTextArea(3, 27);
+        chat_message.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                try {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        e.consume();
+                        send_message_func();
+                    }
+                } catch (Exception er) {
+
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
         caret = (DefaultCaret) chat_message.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_send_message = new JScrollPane(chat_message, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -100,39 +128,19 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         this.add(South, BorderLayout.SOUTH);
         this.add(Center, BorderLayout.CENTER);
         this.setVisible(true);
-        if(this.getFocusOwner().equals(chat_message)){
-        this.getRootPane().setDefaultButton(send_message);
-        }else if(this.getFocusOwner().equals(game_text)){
+        chat_message.requestFocus();
+        if (chat_message.isFocusOwner()) {
+            this.getRootPane().setDefaultButton(send_message);
+        } else if (game_command.isFocusOwner()) {
             this.getRootPane().setDefaultButton(send_command);
         }
-    }
-
-    public void Enter_nm() {
-        try {
-            to_server = new DataOutputStream(serv_socket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(System.in));
-
-            while (Username.equals("")) {
-                chat_text.append("Please enter a username for the chat: ");
-                Username = in.readLine();
-            }
-            to_server.writeBytes(Username + "\n");
-            server_thread.start();
-            System.out.println("Connected!");
-        } catch (Exception e) {
-            // possible issue with socket
-            System.out.println(e);
-        }
-        System.out.println("Welcome to the Chat!");
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String message;
-        System.out.println(e.getActionCommand());
         if (e.getSource().equals(send_command)) {
-
+            send_command_func();
         } else if (e.getSource().equals(send_message)) {
             send_message_func();
         }
@@ -140,13 +148,13 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 
     public void send_message_func() {
         String message;
+        send_data = new byte[1500];
         try {
-            if (chat_message.getText().equals("END")) {
-                serv_socket.close();
-            }
             message = chat_message.getText();
+            send_data = message.getBytes();
             chat_text.append("\n" + message);
-            to_server.writeBytes(message + "\n");
+            send_pack = new DatagramPacket(send_data, send_data.length, serv_ip, port);
+            serv_socket.send(send_pack);
             chat_message.setText("");
         } catch (Exception e) {
             System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
@@ -154,24 +162,37 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         }
     }
 
+    public void send_command_func() {
+        String command;
+        try {
+            command = game_command.getText();
+            game_text.append("\n" + command);
+        } catch (Exception e) {
+
+        }
+    }
+
     @Override
     public void run() {
         String s_mess;
         try {
-            from_server = new BufferedReader(new InputStreamReader(serv_socket.getInputStream()));
+            send_data = Username.getBytes();
+            send_pack = new DatagramPacket(send_data, send_data.length, serv_ip, port);
+            serv_socket.send(send_pack);
         } catch (Exception ei) {
-
+            System.out.println("Not wroking");
         }
-
         while (true) {
             try {
-                s_mess = from_server.readLine();
-                chat_text.append("\n" + s_mess);
-                System.out.println(s_mess);
+                rec_data = new byte[1500];
+                rec_pack = new DatagramPacket(rec_data, rec_data.length);
+              //  serv_socket.receive(rec_pack); // consumes buffer packet
+                serv_socket.receive(rec_pack);
+                s_mess = new String(rec_pack.getData());
+                chat_text.append(s_mess);
             } catch (Exception e) {
-                System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
+                chat_text.append("Oh no! Connection to the server was lost. Please Reconnect.");
                 System.out.println(e);
-                System.exit(-1);
             }
         }
 

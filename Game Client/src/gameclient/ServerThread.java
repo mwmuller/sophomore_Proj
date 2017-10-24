@@ -65,7 +65,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_game = new JScrollPane(game_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_text = new JTextArea(15, 33);
-        chat_text.append("Welcome to the Chat!");
+        chat_text.append("Welcome to the Chat!\n");
         chat_text.setEditable(false);
         chat_text.setLineWrap(true);
         caret = (DefaultCaret) chat_text.getCaret();
@@ -188,8 +188,8 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         } catch (Exception ei) {
             System.out.println("Not wroking");
         }
-
         while (true) {
+<<<<<<< HEAD
             try { // Get the messages from the server from other users
                 s_mess = from_server.readLine();
 //                rec_data = new byte[1500];
@@ -197,11 +197,18 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 //                serv_socket.receive(rec_pack);
 //                s_mess = new String(rec_pack.getData());
 
+=======
+            try {
+                rec_data = new byte[1500];
+                rec_pack = new DatagramPacket(rec_data, rec_data.length);
+              //  serv_socket.receive(rec_pack); // consumes buffer packet
+                serv_socket.receive(rec_pack);
+                s_mess = new String(rec_pack.getData());
+>>>>>>> a85e579f077b22bae553109fab68b33b120bd4c6
                 chat_text.append(s_mess);
             } catch (Exception e) {
-                System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
+                chat_text.append("Oh no! Connection to the server was lost. Please Reconnect.");
                 System.out.println(e);
-                System.exit(-1);
             }
         }
 
