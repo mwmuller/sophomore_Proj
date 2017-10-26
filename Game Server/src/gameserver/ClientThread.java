@@ -58,7 +58,7 @@ public class ClientThread extends JFrame implements Runnable {
             from_client = new BufferedReader(new InputStreamReader(Cli_socket.getInputStream()));
             Username = from_client.readLine();
             System.out.println("\n" + Username + " has connected!");
-            game_serv.echo_chat(this, Username + " has joined the Chat\n", "j");
+            game_serv.echo_chat(this, Username + " has joined the Chat", "j");
             while (true) { // handles the constant chat until they disconnect
                 try {
 //                    rec_data = new byte[1500];
@@ -71,7 +71,7 @@ public class ClientThread extends JFrame implements Runnable {
                     game_serv.echo_chat(this, s_mess, "c");
                 } catch (Exception e) {
                     System.out.println(Username + " Disconnected");
-                    game_serv.echo_chat(this, Username + " has disconnected.\n", "j");
+                    game_serv.echo_chat(this, Username + " has disconnected.", "j");
                     System.out.println(e);
                     break;
                 }

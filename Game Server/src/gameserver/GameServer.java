@@ -90,7 +90,7 @@ public class GameServer {
                 try {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         e.consume();
-                        echo_chat(null, "Moderator: " + message_box.getText() + "\n", "m");
+                        echo_chat(null, "Moderator: " + message_box.getText(), "m");
                         message_box.setText("");
                     }
                 } catch (Exception er) {
@@ -108,7 +108,7 @@ public class GameServer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    echo_chat(null, "Moderator: " + message_box.getText() + "\n", "m");
+                    echo_chat(null, "Moderator: " + message_box.getText(), "m");
                     message_box.setText("");
                 } catch (Exception er) {
                     System.out.println(er);
@@ -130,7 +130,7 @@ public class GameServer {
         if (joined_chat.equals("c")) {
             chat_area.append(client.get_usernm() + ": " + message);
         } else {
-            chat_area.append(message);
+            chat_area.append(message + "\n");
         }
 
         for (int i = 0; i < connected; i++) {

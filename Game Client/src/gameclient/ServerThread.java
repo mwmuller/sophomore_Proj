@@ -49,7 +49,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     }
 
     public void ChatGui(int width, int height, String title) {
-        DefaultCaret caret;
+        DefaultCaret caret_chat_win, caret_game_win, caret_chat_mess, caret_game_comm;
         // create the window and its properties
         this.setSize(width, height);
         this.setResizable(false);
@@ -61,15 +61,15 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         game_text = new JTextArea(15, 42);
         game_text.setEditable(false);
         game_text.setLineWrap(true);
-        caret = (DefaultCaret) game_text.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        caret_game_win = (DefaultCaret) game_text.getCaret();
+        caret_game_win.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_game = new JScrollPane(game_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_text = new JTextArea(15, 33);
         chat_text.append("Welcome to the Chat!");
         chat_text.setEditable(false);
         chat_text.setLineWrap(true);
-        caret = (DefaultCaret) chat_text.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        caret_chat_win = (DefaultCaret) chat_text.getCaret();
+        caret_chat_win.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_chat = new JScrollPane(chat_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_message = new JTextArea(3, 27);
         chat_message.addKeyListener(new KeyListener() {
@@ -93,13 +93,13 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             public void keyReleased(KeyEvent e) {
             }
         });
-        caret = (DefaultCaret) chat_message.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        caret_chat_mess = (DefaultCaret) chat_message.getCaret();
+        caret_chat_mess.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_send_message = new JScrollPane(chat_message, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_message.setLineWrap(true);
         game_command = new JTextArea(3, 35);
-        caret = (DefaultCaret) game_command.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        caret_game_comm = (DefaultCaret) game_command.getCaret();
+        caret_game_comm.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_send_command = new JScrollPane(game_command, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         game_command.setLineWrap(true);
         // Spacers
@@ -192,12 +192,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         while (true) {
             try { // Get the messages from the server from other users
                 s_mess = from_server.readLine();
+                chat_text.append("\n" + s_mess);
 //                rec_data = new byte[1500];
 //                rec_pack = new DatagramPacket(rec_data, rec_data.length);
 //                serv_socket.receive(rec_pack);
 //                s_mess = new String(rec_pack.getData());
-
-                chat_text.append(s_mess);
             } catch (Exception e) {
                 System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
                 System.out.println(e);
