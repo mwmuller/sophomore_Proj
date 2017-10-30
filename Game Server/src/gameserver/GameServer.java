@@ -149,6 +149,10 @@ public class GameServer {
         }
     }
 
+    public static void kick(){ // kicks client
+      
+        
+    }
     public static void echo_chat(ClientThread client, String message, String joined_chat) throws IOException {
         if (joined_chat.equals("c")) {
             chat_area.append(client.get_usernm() + ": " + message);
