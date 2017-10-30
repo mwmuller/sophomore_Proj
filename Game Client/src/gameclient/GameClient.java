@@ -24,7 +24,7 @@ class GameClient {
         String username = "";
         int port = 387;
         try {
-            while (username.equals("") || username.length() < 3) {
+            while (username.equals("") || username.length() < 3 || username.length() > 15) {
                 username = JOptionPane.showInputDialog("Please enter a username for the chat.");
             }
             while (ip.equals("")) {

@@ -21,10 +21,12 @@ public class GameServer {
     protected static InetAddress client_ip;
     protected Thread game_thread;
     // GUI Variables for the server
+    protected static Object combo_holder = "No Clients";
     protected static JPanel west, south, east;
     protected static JTextArea chat_area;
-    protected static JButton send_message;
-    protected static JScrollPane scroll, scroll_box;
+    protected static JComboBox cli_box;
+    protected static JButton send_message, kick_client;
+    protected static JScrollPane scroll, scroll_box, scroll_clients;
     protected static JFrame Server_GUI = new JFrame();
     protected static JTextArea message_box;
     protected static byte[] buffer = new byte[1500];
@@ -61,7 +63,7 @@ public class GameServer {
         chat_area.append(connected + " has connected to the chat!\n");
     }*/
     public static void Serv_GUI(int height, int width, String title) {
-        DefaultCaret caret;
+        DefaultCaret caret_chat, caret_mess;
         Server_GUI.setSize(width, height);
         Server_GUI.setResizable(false);
         Server_GUI.setLayout(new BorderLayout());
@@ -71,14 +73,18 @@ public class GameServer {
         chat_area = new JTextArea(15, 30);
         chat_area.setEditable(false);
         chat_area.setLineWrap(true);
-        caret = (DefaultCaret) chat_area.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        caret_chat = (DefaultCaret) chat_area.getCaret();
+        caret_chat.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll = new JScrollPane(chat_area, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        cli_box = new JComboBox();
+        cli_box.setEditable(false);
+        cli_box.addItem(combo_holder);
 
         message_box = new JTextArea(3, 30);
         message_box.setLineWrap(true);
-        caret = (DefaultCaret) chat_area.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        caret_mess = (DefaultCaret) message_box.getCaret();
+        caret_mess.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_box = new JScrollPane(message_box, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         message_box.addKeyListener(new KeyListener() {
             @Override
@@ -94,7 +100,7 @@ public class GameServer {
                         message_box.setText("");
                     }
                 } catch (Exception er) {
-                  System.out.println(er);
+                    System.out.println(er);
                 }
             }
 
@@ -117,13 +123,30 @@ public class GameServer {
         });
         west = new JPanel();
         south = new JPanel();
+        east = new JPanel();
         west.add(scroll);
         south.add(send_message);
         south.add(scroll_box);
+        west.add(cli_box);
         Server_GUI.add(west, BorderLayout.WEST);
         Server_GUI.add(south, BorderLayout.SOUTH);
+        //Server_GUI.add(east, BorderLayout.EAST);
         Server_GUI.setVisible(true);
 
+    }
+
+    public static void update_clients_box(char add_rem, ClientThread cli) {
+        if (add_rem == 'r') {
+            cli_box.removeItem(cli.get_usernm());
+            if (cli_box.getItemCount() == 1) {
+                cli_box.addItem(combo_holder);
+            }
+        } else {
+            if (cli_box.getItemCount() == 1) {
+                cli_box.removeItem(combo_holder);
+            }
+            cli_box.addItem(cli.get_usernm());
+        }
     }
 
     public static void echo_chat(ClientThread client, String message, String joined_chat) throws IOException {
@@ -141,15 +164,13 @@ public class GameServer {
 //                            send_data = (client.get_usernm() + ": " + message).getBytes();
 //                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
 //                            ssock.send(send_pack);
-                        to_client.writeBytes(message + "\n");
-                        chat_area.append(message + "\n");
+                        to_client.writeBytes(client.get_usernm() + ": " + message + "\n");
                     } else if (joined_chat.equals("j")) { //
 //                            send_data = message.getBytes();
 //                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
 //                            ssock.send(send_pack);
                         to_client.writeBytes(message + "\n");
-                        chat_area.append(message);
-                    }else{
+                    } else {
                         to_client.writeBytes(message + "\n");
                     }
 

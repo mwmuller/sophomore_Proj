@@ -65,7 +65,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         caret_game_win.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_game = new JScrollPane(game_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_text = new JTextArea(15, 33);
-        chat_text.append("Welcome to the Chat!");
+        chat_text.append("Welcome to the Chat!\n");
         chat_text.setEditable(false);
         chat_text.setLineWrap(true);
         caret_chat_win = (DefaultCaret) chat_text.getCaret();
@@ -155,7 +155,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             message = chat_message.getText();
             to_server.writeBytes(message + "\n");
             //  send_data = message.getBytes();
-            chat_text.append("\n" + message);
+            chat_text.append(message + "\n");
             // send_pack = new DatagramPacket(send_data, send_data.length, serv_ip, port);
             // serv_socket.send(send_pack);
             chat_message.setText("");
@@ -190,9 +190,9 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         }
 
         while (true) {
-            try { // Get the messages from the server from other users
+            try { // Get the messages from the server or from other users
                 s_mess = from_server.readLine();
-                chat_text.append("\n" + s_mess);
+                chat_text.append(s_mess + "\n");
 //                rec_data = new byte[1500];
 //                rec_pack = new DatagramPacket(rec_data, rec_data.length);
 //                serv_socket.receive(rec_pack);
