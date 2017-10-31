@@ -37,8 +37,8 @@ public class GameServer {
         Inet_addr = InetAddress.getLocalHost().toString().split("/");
         //ssock = DatagramSocket(387);
         System.out.print(Inet_addr[1]);
-        Serv_GUI(400, 500, "Chat Server " + Inet_addr[1]);
-        ServerSocket ssock = new ServerSocket(80);
+        Serv_GUI(400, 550, "Chat Server " + Inet_addr[1]);
+        ServerSocket ssock = new ServerSocket(443);
         chat_area.append("Hosting at address: " + Inet_addr[1] + "\n");
         chat_area.append("Listening...\n");
         while (true) {
@@ -47,6 +47,14 @@ public class GameServer {
                 Socket Cli_socket = ssock.accept();
                 Clients_arr[connected] = new ClientThread(Cli_socket, "");
                 connected++;
+            }
+        }
+    }
+
+    public static void check_nm(ClientThread cli) {
+        for (int i = 0; i < connected; i++) {
+            if (cli.get_usernm().toLowerCase().equals(Clients_arr[i].get_usernm().toLowerCase())) {
+                cli.set_usernm(cli.get_usernm() + connected);
             }
         }
     }
@@ -109,38 +117,67 @@ public class GameServer {
             }
         });
         send_message = new JButton("Send");
+        kick_client = new JButton("Kick");
         Server_GUI.getRootPane().setDefaultButton(send_message);
-        send_message.addActionListener(new ActionListener() {
-            @Override
+        ActionListener Click = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    echo_chat(null, "Moderator: " + message_box.getText(), "m");
-                    message_box.setText("");
+                    if (e.getSource() == send_message) {
+                        echo_chat(null, "Moderator: " + message_box.getText(), "m");
+                        message_box.setText("");
+                    } else if (e.getSource() == kick_client) {
+                        kick(cli_box.getSelectedItem().toString());
+                        System.out.println("You kicked someone!");
+                    }
                 } catch (Exception er) {
                     System.out.println(er);
                 }
             }
-        });
+        };
+        send_message.addActionListener(Click);
+
+        kick_client.addActionListener(Click);
+//        send_message.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                try {
+//                    echo_chat(null, "Moderator: " + message_box.getText(), "m");
+//                    message_box.setText("");
+//                } catch (Exception er) {
+//                    System.out.println(er);
+//                }
+//            }
+//        });
         west = new JPanel();
         south = new JPanel();
         east = new JPanel();
+
         west.add(scroll);
+
         south.add(send_message);
+
         south.add(scroll_box);
+
         west.add(cli_box);
+
+        west.add(kick_client);
+
         Server_GUI.add(west, BorderLayout.WEST);
+
         Server_GUI.add(south, BorderLayout.SOUTH);
         //Server_GUI.add(east, BorderLayout.EAST);
-        Server_GUI.setVisible(true);
+
+        Server_GUI.setVisible(
+                true);
 
     }
 
     public static void update_clients_box(char add_rem, ClientThread cli) {
         if (add_rem == 'r') {
-            cli_box.removeItem(cli.get_usernm());
             if (cli_box.getItemCount() == 1) {
                 cli_box.addItem(combo_holder);
             }
+            cli_box.removeItem(cli.get_usernm());
         } else {
             if (cli_box.getItemCount() == 1) {
                 cli_box.removeItem(combo_holder);
@@ -149,10 +186,19 @@ public class GameServer {
         }
     }
 
-    public static void kick(){ // kicks client
-      
-        
+    public static void kick(String usernm) { // kicks client
+        for (int i = 0; i < connected; i++) {
+            try {
+                if (Clients_arr[i].get_usernm().equals(usernm)) {
+                    update_clients_box('r', Clients_arr[i]);
+                    Clients_arr[i].get_socket().close();
+                }
+            } catch (Exception e) {
+                System.out.println("Issues kicking Client: " + Clients_arr[i].get_usernm());
+            }
+        }
     }
+
     public static void echo_chat(ClientThread client, String message, String joined_chat) throws IOException {
         if (joined_chat.equals("c")) {
             chat_area.append(client.get_usernm() + ": " + message);
@@ -182,6 +228,13 @@ public class GameServer {
                     //System.out.println(e);
                 }
             }
+        }
+    }
+
+    public static void game_chat(ClientThread cli, String command) throws IOException {
+        to_client = new DataOutputStream((cli.get_socket().getOutputStream()));
+        if (command.toLowerCase().equals("start")) {
+            to_client.writeBytes("gThere are no games fool!");
         }
     }
 }
