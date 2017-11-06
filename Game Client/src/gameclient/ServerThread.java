@@ -169,7 +169,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         String command;
         try {
             command = game_command.getText();
-            game_text.append("\n" + command);
+            game_text.append(command + "\n");
         } catch (Exception e) {
 
         }
@@ -192,12 +192,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         while (true) {
             try { // Get the messages from the server from other users
                 s_mess = from_server.readLine();
+                chat_text.append("\n" + s_mess);
 //                rec_data = new byte[1500];
 //                rec_pack = new DatagramPacket(rec_data, rec_data.length);
 //                serv_socket.receive(rec_pack);
 //                s_mess = new String(rec_pack.getData());
-
-                chat_text.append(s_mess);
             } catch (Exception e) {
                 System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
                 System.out.println(e);

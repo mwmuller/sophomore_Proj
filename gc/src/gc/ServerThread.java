@@ -37,7 +37,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         server_thread = new Thread(this);
         serv_socket = sock;
         ChatGui(900, 320, "Game and Chat Hub");
-        Enter_nm();
+   //     Enter_nm();
     }
 
     public void ChatGui(int width, int height, String title) {
@@ -107,25 +107,25 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         }
     }
 
-    public void Enter_nm() {
-        try {
-            to_server = new DataOutputStream(serv_socket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(System.in));
-
-            while (Username.equals("")) {
-                chat_text.append("Please enter a username for the chat: ");
-                Username = in.readLine();
-            }
-            to_server.writeBytes(Username + "\n");
-            server_thread.start();
-            System.out.println("Connected!");
-        } catch (Exception e) {
-            // possible issue with socket
-            System.out.println(e);
-        }
-        System.out.println("Welcome to the Chat!");
-
-    }
+//    public void Enter_nm() {
+//        try {
+//            to_server = new DataOutputStream(serv_socket.getOutputStream());
+//            in = new BufferedReader(new InputStreamReader(System.in));
+//
+//            while (Username.equals("")) {
+//                chat_text.append("Please enter a username for the chat: ");
+//                Username = in.readLine();
+//            }
+//            to_server.writeBytes(Username + "\n");
+//            server_thread.start();
+//            System.out.println("Connected!");
+//        } catch (Exception e) {
+//            // possible issue with socket
+//            System.out.println(e);
+//        }
+//        System.out.println("Welcome to the Chat!");
+//
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -141,9 +141,6 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     public void send_message_func() {
         String message;
         try {
-            if (chat_message.getText().equals("END")) {
-                serv_socket.close();
-            }
             message = chat_message.getText();
             chat_text.append("\n" + message);
             to_server.writeBytes(message + "\n");
@@ -163,10 +160,10 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 
         }
 
-        while (true) {
+        while (true) { // Reads in messages from the server
             try {
                 s_mess = from_server.readLine();
-                chat_text.append("\n" + s_mess);
+                chat_text.append("\n" + s_mess + "\n");
                 System.out.println(s_mess);
             } catch (Exception e) {
                 System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
