@@ -10,8 +10,10 @@ import java.net.*;
 import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Locale;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
+import org.omg.CORBA.Environment;
 
 /**
  *
@@ -46,10 +48,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         serv_socket = sock;
         server_thread.start();
         ChatGui(900, 320, "Game and Chat Hub");
+        game_text.append("Please Type Start to select a game: ");
     }
 
     public void ChatGui(int width, int height, String title) {
-        DefaultCaret caret;
+        DefaultCaret caret_chat_wim;
         // create the window and its properties
         this.setSize(width, height);
         this.setResizable(false);
@@ -61,15 +64,13 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         game_text = new JTextArea(15, 42);
         game_text.setEditable(false);
         game_text.setLineWrap(true);
-        caret = (DefaultCaret) game_text.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_game = new JScrollPane(game_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_text = new JTextArea(15, 33);
-        chat_text.append("Welcome to the Chat!");
+        chat_text.append("Welcome to the Chat!\n");
         chat_text.setEditable(false);
         chat_text.setLineWrap(true);
-        caret = (DefaultCaret) chat_text.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        caret_chat_wim = (DefaultCaret) chat_text.getCaret();
+        caret_chat_wim.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_chat = new JScrollPane(chat_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_message = new JTextArea(3, 27);
         chat_message.addKeyListener(new KeyListener() {
@@ -93,13 +94,9 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             public void keyReleased(KeyEvent e) {
             }
         });
-        caret = (DefaultCaret) chat_message.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_send_message = new JScrollPane(chat_message, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chat_message.setLineWrap(true);
         game_command = new JTextArea(3, 35);
-        caret = (DefaultCaret) game_command.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_send_command = new JScrollPane(game_command, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         game_command.setLineWrap(true);
         // Spacers
@@ -153,9 +150,9 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         //send_data = new byte[1500];
         try {
             message = chat_message.getText();
-            to_server.writeBytes(message + "\n");
+            to_server.writeBytes("c" + message + "\n");
             //  send_data = message.getBytes();
-            chat_text.append("\n" + message);
+            chat_text.append(message + "\n");
             // send_pack = new DatagramPacket(send_data, send_data.length, serv_ip, port);
             // serv_socket.send(send_pack);
             chat_message.setText("");
@@ -169,7 +166,12 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         String command;
         try {
             command = game_command.getText();
+<<<<<<< HEAD
             game_text.append(command + "\n");
+=======
+            game_text.append("g" + command + "\n");
+            game_command.setText("");
+>>>>>>> 27bae5b81c43d471b57ba677f69ff4b618dcecc3
         } catch (Exception e) {
 
         }
@@ -179,7 +181,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     public void run() {
         String s_mess;
 
-        try { // Send your username to the Server to store it 
+        try { // Send your usern ame to the Server to store it 
             from_server = new BufferedReader(new InputStreamReader(serv_socket.getInputStream()));
             to_server = new DataOutputStream((serv_socket.getOutputStream()));
 //            send_data = Username.getBytes();
@@ -190,9 +192,22 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         }
 
         while (true) {
-            try { // Get the messages from the server from other users
+            try { // Get the messages from the server or from other users
                 s_mess = from_server.readLine();
+<<<<<<< HEAD
                 chat_text.append("\n" + s_mess);
+=======
+                if (s_mess == null) {
+                    JOptionPane warning = new JOptionPane("You Have been kicked from the server!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
+                    JOptionPane.showMessageDialog(warning, "You have been kicked");
+                    System.exit(-1);
+                }
+                if (s_mess.charAt(0) == 'c') {
+                    chat_text.append(s_mess.substring(1) + "\n");
+                } else {
+                    game_text.append(s_mess.substring(1) + "\n");
+                }
+>>>>>>> 27bae5b81c43d471b57ba677f69ff4b618dcecc3
 //                rec_data = new byte[1500];
 //                rec_pack = new DatagramPacket(rec_data, rec_data.length);
 //                serv_socket.receive(rec_pack);

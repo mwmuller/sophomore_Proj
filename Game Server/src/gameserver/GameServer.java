@@ -21,10 +21,12 @@ public class GameServer {
     protected static InetAddress client_ip;
     protected Thread game_thread;
     // GUI Variables for the server
+    protected static Object combo_holder = "No Clients";
     protected static JPanel west, south, east;
     protected static JTextArea chat_area;
-    protected static JButton send_message;
-    protected static JScrollPane scroll, scroll_box;
+    protected static JComboBox cli_box;
+    protected static JButton send_message, kick_client;
+    protected static JScrollPane scroll, scroll_box, scroll_clients;
     protected static JFrame Server_GUI = new JFrame();
     protected static JTextArea message_box;
     protected static byte[] buffer = new byte[1500];
@@ -35,8 +37,8 @@ public class GameServer {
         Inet_addr = InetAddress.getLocalHost().toString().split("/");
         //ssock = DatagramSocket(387);
         System.out.print(Inet_addr[1]);
-        Serv_GUI(400, 500, "Chat Server " + Inet_addr[1]);
-        ServerSocket ssock = new ServerSocket(80);
+        Serv_GUI(400, 550, "Chat Server " + Inet_addr[1]);
+        ServerSocket ssock = new ServerSocket(443);
         chat_area.append("Hosting at address: " + Inet_addr[1] + "\n");
         chat_area.append("Listening...\n");
         while (true) {
@@ -45,6 +47,14 @@ public class GameServer {
                 Socket Cli_socket = ssock.accept();
                 Clients_arr[connected] = new ClientThread(Cli_socket, "");
                 connected++;
+            }
+        }
+    }
+
+    public static void check_nm(ClientThread cli) {
+        for (int i = 0; i < connected; i++) {
+            if (cli.get_usernm().toLowerCase().equals(Clients_arr[i].get_usernm().toLowerCase())) {
+                cli.set_usernm(cli.get_usernm() + connected);
             }
         }
     }
@@ -61,7 +71,7 @@ public class GameServer {
         chat_area.append(connected + " has connected to the chat!\n");
     }*/
     public static void Serv_GUI(int height, int width, String title) {
-        DefaultCaret caret;
+        DefaultCaret caret_chat, caret_mess;
         Server_GUI.setSize(width, height);
         Server_GUI.setResizable(false);
         Server_GUI.setLayout(new BorderLayout());
@@ -71,14 +81,18 @@ public class GameServer {
         chat_area = new JTextArea(15, 30);
         chat_area.setEditable(false);
         chat_area.setLineWrap(true);
-        caret = (DefaultCaret) chat_area.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        caret_chat = (DefaultCaret) chat_area.getCaret();
+        caret_chat.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll = new JScrollPane(chat_area, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        cli_box = new JComboBox();
+        cli_box.setEditable(false);
+        cli_box.addItem(combo_holder);
 
         message_box = new JTextArea(3, 30);
         message_box.setLineWrap(true);
-        caret = (DefaultCaret) chat_area.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        caret_mess = (DefaultCaret) message_box.getCaret();
+        caret_mess.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_box = new JScrollPane(message_box, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         message_box.addKeyListener(new KeyListener() {
             @Override
@@ -90,11 +104,11 @@ public class GameServer {
                 try {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         e.consume();
-                        echo_chat(null, "Moderator: " + message_box.getText() + "\n", "m");
+                        echo_chat(null, "Moderator: " + message_box.getText(), "m");
                         message_box.setText("");
                     }
                 } catch (Exception er) {
-                  System.out.println(er);
+                    System.out.println(er);
                 }
             }
 
@@ -103,34 +117,93 @@ public class GameServer {
             }
         });
         send_message = new JButton("Send");
+        kick_client = new JButton("Kick");
         Server_GUI.getRootPane().setDefaultButton(send_message);
-        send_message.addActionListener(new ActionListener() {
-            @Override
+        ActionListener Click = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    echo_chat(null, "Moderator: " + message_box.getText() + "\n", "m");
-                    message_box.setText("");
+                    if (e.getSource() == send_message) {
+                        echo_chat(null, "Moderator: " + message_box.getText(), "m");
+                        message_box.setText("");
+                    } else if (e.getSource() == kick_client) {
+                        kick(cli_box.getSelectedItem().toString());
+                        System.out.println("You kicked someone!");
+                    }
                 } catch (Exception er) {
                     System.out.println(er);
                 }
             }
-        });
+        };
+        send_message.addActionListener(Click);
+
+        kick_client.addActionListener(Click);
+//        send_message.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                try {
+//                    echo_chat(null, "Moderator: " + message_box.getText(), "m");
+//                    message_box.setText("");
+//                } catch (Exception er) {
+//                    System.out.println(er);
+//                }
+//            }
+//        });
         west = new JPanel();
         south = new JPanel();
-        west.add(scroll);
-        south.add(send_message);
-        south.add(scroll_box);
-        Server_GUI.add(west, BorderLayout.WEST);
-        Server_GUI.add(south, BorderLayout.SOUTH);
-        Server_GUI.setVisible(true);
+        east = new JPanel();
 
+        west.add(scroll);
+
+        south.add(send_message);
+
+        south.add(scroll_box);
+
+        west.add(cli_box);
+
+        west.add(kick_client);
+
+        Server_GUI.add(west, BorderLayout.WEST);
+
+        Server_GUI.add(south, BorderLayout.SOUTH);
+        //Server_GUI.add(east, BorderLayout.EAST);
+
+        Server_GUI.setVisible(
+                true);
+
+    }
+
+    public static void update_clients_box(char add_rem, ClientThread cli) {
+        if (add_rem == 'r') {
+            if (cli_box.getItemCount() == 1) {
+                cli_box.addItem(combo_holder);
+            }
+            cli_box.removeItem(cli.get_usernm());
+        } else {
+            if (cli_box.getItemCount() == 1) {
+                cli_box.removeItem(combo_holder);
+            }
+            cli_box.addItem(cli.get_usernm());
+        }
+    }
+
+    public static void kick(String usernm) { // kicks client
+        for (int i = 0; i < connected; i++) {
+            try {
+                if (Clients_arr[i].get_usernm().equals(usernm)) {
+                    update_clients_box('r', Clients_arr[i]);
+                    Clients_arr[i].get_socket().close();
+                }
+            } catch (Exception e) {
+                System.out.println("Issues kicking Client: " + Clients_arr[i].get_usernm());
+            }
+        }
     }
 
     public static void echo_chat(ClientThread client, String message, String joined_chat) throws IOException {
         if (joined_chat.equals("c")) {
             chat_area.append(client.get_usernm() + ": " + message);
         } else {
-            chat_area.append(message);
+            chat_area.append(message + "\n");
         }
 
         for (int i = 0; i < connected; i++) {
@@ -141,15 +214,13 @@ public class GameServer {
 //                            send_data = (client.get_usernm() + ": " + message).getBytes();
 //                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
 //                            ssock.send(send_pack);
-                        to_client.writeBytes(message + "\n");
-                        chat_area.append(message + "\n");
+                        to_client.writeBytes(client.get_usernm() + ": " + message + "\n");
                     } else if (joined_chat.equals("j")) { //
 //                            send_data = message.getBytes();
 //                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
 //                            ssock.send(send_pack);
                         to_client.writeBytes(message + "\n");
-                        chat_area.append(message);
-                    }else{
+                    } else {
                         to_client.writeBytes(message + "\n");
                     }
 
@@ -157,6 +228,13 @@ public class GameServer {
                     //System.out.println(e);
                 }
             }
+        }
+    }
+
+    public static void game_chat(ClientThread cli, String command) throws IOException {
+        to_client = new DataOutputStream((cli.get_socket().getOutputStream()));
+        if (command.toLowerCase().equals("start")) {
+            to_client.writeBytes("gThere are no games fool!");
         }
     }
 }

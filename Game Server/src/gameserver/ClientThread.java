@@ -47,6 +47,10 @@ public class ClientThread extends JFrame implements Runnable {
         return Username;
     }
 
+    public void set_usernm(String usernm) {
+        Username = usernm;
+    }
+
     @Override
     public void run() {
         String c_mess, s_mess;
@@ -57,8 +61,10 @@ public class ClientThread extends JFrame implements Runnable {
 //            Username = new String(rec_pack.getData());
             from_client = new BufferedReader(new InputStreamReader(Cli_socket.getInputStream()));
             Username = from_client.readLine();
+
             System.out.println("\n" + Username + " has connected!");
-            game_serv.echo_chat(this, Username + " has joined the Chat\n", "j");
+            game_serv.echo_chat(this, Username + " has joined the Chat", "j");
+            game_serv.update_clients_box('a', this);
             while (true) { // handles the constant chat until they disconnect
                 try {
 //                    rec_data = new byte[1500];
@@ -66,12 +72,18 @@ public class ClientThread extends JFrame implements Runnable {
 //                    Cli_socket.receive(rec_pack);
                     c_mess = from_client.readLine();
                     // c_mess = new String(rec_pack.getData());
-                    System.out.println(Username + ": " + c_mess);
-                    s_mess = c_mess + "\n";
-                    game_serv.echo_chat(this, s_mess, "c");
+                    if (c_mess.charAt(0) == 'g') {
+                        c_mess = c_mess.substring(1);
+                        
+                    } else {
+                        s_mess = c_mess.substring(1);
+                        s_mess = s_mess + "\n";
+                        game_serv.echo_chat(this, s_mess, "c");
+                    }
                 } catch (Exception e) {
                     System.out.println(Username + " Disconnected");
-                    game_serv.echo_chat(this, Username + " has disconnected.\n", "j");
+                    game_serv.echo_chat(this, Username + " has disconnected.", "j");
+                    game_serv.update_clients_box('r', this);
                     System.out.println(e);
                     break;
                 }
