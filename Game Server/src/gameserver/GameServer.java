@@ -214,14 +214,14 @@ public class GameServer {
 //                            send_data = (client.get_usernm() + ": " + message).getBytes();
 //                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
 //                            ssock.send(send_pack);
-                        to_client.writeBytes(client.get_usernm() + ": " + message + "\n");
+                        to_client.writeBytes("c" + client.get_usernm() + ": " + message + "\n");
                     } else if (joined_chat.equals("j")) { //
 //                            send_data = message.getBytes();
 //                            send_pack = new DatagramPacket(send_data, send_data.length, Clients_arr[i].get_ip(), 387);
 //                            ssock.send(send_pack);
-                        to_client.writeBytes(message + "\n");
+                        to_client.writeBytes("c" + message + "\n");
                     } else {
-                        to_client.writeBytes(message + "\n");
+                        to_client.writeBytes("c" + message + "\n");
                     }
 
                 } catch (Exception e) {

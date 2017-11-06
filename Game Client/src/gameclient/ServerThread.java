@@ -166,12 +166,12 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         String command;
         try {
             command = game_command.getText();
-<<<<<<< HEAD
+
             game_text.append(command + "\n");
-=======
-            game_text.append("g" + command + "\n");
+
+            to_server.writeBytes("g" + command + "\n");
             game_command.setText("");
->>>>>>> 27bae5b81c43d471b57ba677f69ff4b618dcecc3
+
         } catch (Exception e) {
 
         }
@@ -194,9 +194,9 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         while (true) {
             try { // Get the messages from the server or from other users
                 s_mess = from_server.readLine();
-<<<<<<< HEAD
+
                 chat_text.append("\n" + s_mess);
-=======
+
                 if (s_mess == null) {
                     JOptionPane warning = new JOptionPane("You Have been kicked from the server!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
                     JOptionPane.showMessageDialog(warning, "You have been kicked");
@@ -207,7 +207,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                 } else {
                     game_text.append(s_mess.substring(1) + "\n");
                 }
->>>>>>> 27bae5b81c43d471b57ba677f69ff4b618dcecc3
+
 //                rec_data = new byte[1500];
 //                rec_pack = new DatagramPacket(rec_data, rec_data.length);
 //                serv_socket.receive(rec_pack);
