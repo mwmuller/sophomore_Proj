@@ -77,28 +77,23 @@ public class GameServer {
         Server_GUI.setLayout(new BorderLayout());
         Server_GUI.setTitle(title);
         Server_GUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         chat_area = new JTextArea(15, 30);
         chat_area.setEditable(false);
         chat_area.setLineWrap(true);
         caret_chat = (DefaultCaret) chat_area.getCaret();
         caret_chat.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll = new JScrollPane(chat_area, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
         cli_box = new JComboBox();
         cli_box.setEditable(false);
         cli_box.addItem(combo_holder);
-
         message_box = new JTextArea(3, 30);
         message_box.setLineWrap(true);
-        caret_mess = (DefaultCaret) message_box.getCaret();
-        caret_mess.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         scroll_box = new JScrollPane(message_box, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         message_box.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
             }
-
+            
             @Override
             public void keyPressed(KeyEvent e) {
                 try {
@@ -135,40 +130,19 @@ public class GameServer {
             }
         };
         send_message.addActionListener(Click);
-
         kick_client.addActionListener(Click);
-//        send_message.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    echo_chat(null, "Moderator: " + message_box.getText(), "m");
-//                    message_box.setText("");
-//                } catch (Exception er) {
-//                    System.out.println(er);
-//                }
-//            }
-//        });
         west = new JPanel();
         south = new JPanel();
         east = new JPanel();
-
         west.add(scroll);
-
         south.add(send_message);
-
         south.add(scroll_box);
-
         west.add(cli_box);
-
         west.add(kick_client);
-
         Server_GUI.add(west, BorderLayout.WEST);
-
         Server_GUI.add(south, BorderLayout.SOUTH);
         //Server_GUI.add(east, BorderLayout.EAST);
-
-        Server_GUI.setVisible(
-                true);
+        Server_GUI.setVisible(true);
 
     }
 

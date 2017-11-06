@@ -48,7 +48,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         serv_socket = sock;
         server_thread.start();
         ChatGui(900, 320, "Game and Chat Hub");
-        game_text.append("Please Type Start to select a game: ");
+        game_text.append("Please Type Start to select a game: \n");
     }
 
     public void ChatGui(int width, int height, String title) {
@@ -82,8 +82,13 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             public void keyPressed(KeyEvent e) {
                 try {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        if(!chat_message.getText().equals("")){
                         e.consume();
                         send_message_func();
+                        }else{
+                            e.consume();
+                            chat_message.setText("");
+                        }
                     }
                 } catch (Exception er) {
 
@@ -99,6 +104,32 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         game_command = new JTextArea(3, 35);
         scroll_send_command = new JScrollPane(game_command, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         game_command.setLineWrap(true);
+        game_command.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                try {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        if(!game_command.getText().equals("")){
+                        e.consume();
+                        send_command_func();
+                        }else{
+                            e.consume();
+                            game_command.setText("");
+                        }
+                    }
+                } catch (Exception er) {
+
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
         // Spacers
         spacer_lbl_recieve = new JLabel("        ");
         spacer_lbl_send = new JLabel("         ");
@@ -139,9 +170,17 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     public void actionPerformed(ActionEvent e) {
         String message;
         if (e.getSource().equals(send_command)) {
-            send_command_func();
+            if (!game_command.getText().equals("")) {
+                send_command_func();
+            }else{
+                game_command.setText("");
+            }
         } else if (e.getSource().equals(send_message)) {
-            send_message_func();
+            if (!chat_message.getText().equals("")) {
+                send_message_func();
+            }else{
+                chat_message.setText("");
+            }
         }
     }
 
@@ -166,9 +205,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         String command;
         try {
             command = game_command.getText();
-
             game_text.append(command + "\n");
-
             to_server.writeBytes("g" + command + "\n");
             game_command.setText("");
 
@@ -194,8 +231,6 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         while (true) {
             try { // Get the messages from the server or from other users
                 s_mess = from_server.readLine();
-
-                chat_text.append("\n" + s_mess);
 
                 if (s_mess == null) {
                     JOptionPane warning = new JOptionPane("You Have been kicked from the server!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);

@@ -60,9 +60,8 @@ public class ClientThread extends JFrame implements Runnable {
 //            Cli_socket.receive(rec_pack);
 //            Username = new String(rec_pack.getData());
             from_client = new BufferedReader(new InputStreamReader(Cli_socket.getInputStream()));
+            // reads in the username if they join the chat
             Username = from_client.readLine();
-
-            System.out.println("\n" + Username + " has connected!");
             game_serv.echo_chat(this, Username + " has joined the Chat", "j");
             game_serv.update_clients_box('a', this);
             while (true) { // handles the constant chat until they disconnect
@@ -81,7 +80,6 @@ public class ClientThread extends JFrame implements Runnable {
                         game_serv.echo_chat(this, s_mess, "c");
                     }
                 } catch (Exception e) {
-                    System.out.println(Username + " Disconnected");
                     game_serv.echo_chat(this, Username + " has disconnected.", "j");
                     game_serv.update_clients_box('r', this);
                     System.out.println(e);
