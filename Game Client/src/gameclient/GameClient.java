@@ -15,7 +15,7 @@ class GameClient {
     private static ServerThread serv_thread;
     private static String ip = "";
     static DatagramPacket usernm_send;
-    
+
 //    static byte[] buf = new byte[1024];
 //    static byte[] send = new byte[1024];
     protected static InetAddress serv_inet;
@@ -42,7 +42,7 @@ class GameClient {
 //            client_socket = new DatagramSocket();
 //            client_socket.send(usernm_send);
 //            client_socket.connect(serv_inet, port);
-            client_socket = new Socket(ip, 1244);
+            client_socket = new Socket(ip, 1234);
             DataOutputStream to_serv = new DataOutputStream((client_socket.getOutputStream()));
             to_serv.writeBytes(username + "\n");
             serv_thread = new ServerThread(client_socket, username, serv_inet, port);

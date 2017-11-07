@@ -55,7 +55,7 @@ public class GameServer {
 
     public static void check_nm(ClientThread cli) {
         for (int i = 0; i < connected; i++) {
-            if (cli.get_usernm().toLowerCase().equals(Clients_arr[i].get_usernm().toLowerCase())) {
+            if (cli.get_usernm().toLowerCase().equals(Clients_arr[i].get_usernm().toLowerCase()) && cli != Clients_arr[i]) {
                 cli.set_usernm(cli.get_usernm() + connected);
             }
         }
@@ -100,9 +100,14 @@ public class GameServer {
             public void keyPressed(KeyEvent e) {
                 try {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                        e.consume();
-                        echo_chat(null, "Moderator: " + message_box.getText(), "m");
-                        message_box.setText("");
+                        if (!message_box.getText().equals("")) {
+                            e.consume();
+                            echo_chat(null, "Moderator: " + message_box.getText(), "m");
+                            message_box.setText("");
+                        } else {
+                            e.consume();
+                            message_box.setText("");
+                        }
                     }
                 } catch (Exception er) {
                     System.out.println(er);
@@ -120,8 +125,10 @@ public class GameServer {
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (e.getSource() == send_message) {
-                        echo_chat(null, "Moderator: " + message_box.getText(), "m");
-                        message_box.setText("");
+                        if (!message_box.getText().equals("")) {
+                            echo_chat(null, "Moderator: " + message_box.getText(), "m");
+                            message_box.setText("");
+                        }
                     } else if (e.getSource() == kick_client) {
                         kick(cli_box.getSelectedItem().toString());
                         System.out.println("You kicked someone!");
@@ -154,7 +161,6 @@ public class GameServer {
                 cli_box.addItem(combo_holder);
             }
             cli_box.removeItem(cli.get_usernm());
-            connected--;
         } else {
             if (cli_box.getItemCount() == 1) {
                 cli_box.removeItem(combo_holder);
@@ -176,7 +182,7 @@ public class GameServer {
                     update_clients_box('r', Clients_arr[i]);
                     to_client = new DataOutputStream((Clients_arr[i].get_socket().getOutputStream()));
                     // Clients_arr[i].sets
-                    to_client.writeBytes("k");
+                    to_client.writeBytes("k\n");
                 }
             } catch (Exception e) {
                 System.out.println("Issues kicking Client: " + Clients_arr[i].get_usernm());
