@@ -22,7 +22,7 @@ class GameClient {
 
     public static void main(String[] args) throws Exception {
         String username = "";
-        int port = 18888;
+        int port = 1234;
         try {
             while (username.equals("") || username.length() < 3 || username.length() > 15) {
                 username = JOptionPane.showInputDialog("Please enter a username for the chat.");
@@ -42,7 +42,7 @@ class GameClient {
 //            client_socket = new DatagramSocket();
 //            client_socket.send(usernm_send);
 //            client_socket.connect(serv_inet, port);
-            client_socket = new Socket(ip, 443);
+            client_socket = new Socket(ip, 1244);
             DataOutputStream to_serv = new DataOutputStream((client_socket.getOutputStream()));
             to_serv.writeBytes(username + "\n");
             serv_thread = new ServerThread(client_socket, username, serv_inet, port);

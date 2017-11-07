@@ -39,7 +39,7 @@ public class GameServer {
         //ssock = DatagramSocket(387);
         System.out.print(Inet_addr[1]);
         Serv_GUI(400, 550, "Chat Server " + Inet_addr[1]);
-        ServerSocket ssock = new ServerSocket(18888);
+        ServerSocket ssock = new ServerSocket(1234);
         chat_area.append("Hosting at address: " + Inet_addr[1] + "\n");
         chat_area.append("Listening...\n");
         while (true) {
