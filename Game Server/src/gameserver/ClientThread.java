@@ -76,7 +76,7 @@ public class ClientThread extends JFrame implements Runnable {
                         
                     } else {
                         s_mess = c_mess.substring(1);
-                        s_mess = s_mess + "\n";
+                      //  s_mess = s_mess + "\n";
                         game_serv.echo_chat(this, s_mess, "c");
                     }
                 } catch (Exception e) {

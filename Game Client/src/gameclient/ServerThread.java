@@ -214,6 +214,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         }
     }
 
+    private void kicked(){
+       JOptionPane warning = new JOptionPane("You Have been kicked from the server!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
+                    JOptionPane.showMessageDialog(warning, "You have been kicked");
+                    System.exit(-1); 
+    }
     @Override
     public void run() {
         String s_mess;
@@ -233,13 +238,14 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                 s_mess = from_server.readLine();
 
                 if (s_mess == null) {
-                    JOptionPane warning = new JOptionPane("You Have been kicked from the server!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
-                    JOptionPane.showMessageDialog(warning, "You have been kicked");
-                    System.exit(-1);
+                   kicked();
                 }
                 if (s_mess.charAt(0) == 'c') {
                     chat_text.append(s_mess.substring(1) + "\n");
-                } else {
+                }else if (s_mess.charAt(0) == 'k'){
+                   kicked();
+                }
+                else  {
                     game_text.append(s_mess.substring(1) + "\n");
                 }
 

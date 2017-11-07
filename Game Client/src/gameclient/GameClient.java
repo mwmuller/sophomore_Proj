@@ -22,7 +22,7 @@ class GameClient {
 
     public static void main(String[] args) throws Exception {
         String username = "";
-        int port = 387;
+        int port = 18888;
         try {
             while (username.equals("") || username.length() < 3 || username.length() > 15) {
                 username = JOptionPane.showInputDialog("Please enter a username for the chat.");
