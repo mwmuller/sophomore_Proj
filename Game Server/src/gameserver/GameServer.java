@@ -11,7 +11,6 @@ import javax.swing.event.*;
 public class GameServer {
 
     private static int max = 100;
-    protected static int max_index = 0;
     private static ClientThread[] Clients_arr = new ClientThread[max];
     private static int connected = 0;
     protected static String[] Inet_addr;
@@ -46,17 +45,20 @@ public class GameServer {
             if (connected <= max) {
                 // get_username_packet();
                 Socket Cli_socket = ssock.accept();
-                Clients_arr[connected] = new ClientThread(Cli_socket, "");
+                Clients_arr[connected] = new ClientThread(Cli_socket, "", connected);
                 connected++;
-                max_index++;
             }
         }
     }
 
     public static void check_nm(ClientThread cli) {
         for (int i = 0; i < connected; i++) {
-            if (cli.get_usernm().toLowerCase().equals(Clients_arr[i].get_usernm().toLowerCase()) && cli != Clients_arr[i]) {
-                cli.set_usernm(cli.get_usernm() + connected);
+            try {
+                if (cli.get_usernm().toLowerCase().equals(Clients_arr[i].get_usernm().toLowerCase()) && cli != Clients_arr[i]) {
+                    cli.set_usernm(cli.get_usernm() + connected);
+                }
+            } catch (Exception e) {
+
             }
         }
     }
@@ -183,11 +185,20 @@ public class GameServer {
                     to_client = new DataOutputStream((Clients_arr[i].get_socket().getOutputStream()));
                     // Clients_arr[i].sets
                     to_client.writeBytes("k\n");
+                    remove_client(i);
                 }
             } catch (Exception e) {
                 System.out.println("Issues kicking Client: " + Clients_arr[i].get_usernm());
             }
         }
+    }
+
+    public static void remove_client(int index) {
+        for (int i = index; i < connected; i++) {
+            Clients_arr[i] = Clients_arr[i + 1];
+            Clients_arr[i].set_place(i);
+        }
+        connected--;
     }
 
     public static void echo_chat(ClientThread client, String message, String joined_chat) throws IOException {
@@ -225,7 +236,15 @@ public class GameServer {
     public static void game_chat(ClientThread cli, String command) throws IOException {
         to_client = new DataOutputStream((cli.get_socket().getOutputStream()));
         if (command.toLowerCase().equals("start")) {
-            to_client.writeBytes("gThere are no games fool!");
+            to_client.writeBytes("gThere are no games fool!\n");
         }
+    }
+
+    public static void make_group(ClientThread cli) {
+        // will add users to a group adn keep track of all 
+    }
+
+    public static void record_chat(String message) {
+
     }
 }

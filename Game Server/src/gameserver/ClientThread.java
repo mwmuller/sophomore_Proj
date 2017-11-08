@@ -24,11 +24,13 @@ public class ClientThread extends JFrame implements Runnable {
     // private DatagramPacket rec_pack;
     protected InetAddress client_ip;
     private String Username;
+    private int place;
     private Thread client_thread;
     private GameServer game_serv = new GameServer();
 
-    ClientThread(Socket socket, String user_nm) { // populated
+    ClientThread(Socket socket, String user_nm, int index) { // populated
         Cli_socket = socket;
+        place = index;
         Username = user_nm;
         client_thread = new Thread(this);
         client_thread.start();
@@ -44,6 +46,14 @@ public class ClientThread extends JFrame implements Runnable {
 
     public String get_usernm() {
         return Username;
+    }
+
+    public int get_place() {
+        return place;
+    }
+
+    public void set_place(int index) {
+        place = index;
     }
 
     public void set_usernm(String usernm) {
@@ -72,8 +82,7 @@ public class ClientThread extends JFrame implements Runnable {
                     c_mess = from_client.readLine();
                     // c_mess = new String(rec_pack.getData());
                     if (c_mess.charAt(0) == 'g') {
-                        c_mess = c_mess.substring(1);
-
+                        game_serv.game_chat(this, c_mess.substring(1));
                     } else {
                         s_mess = c_mess.substring(1);
                         //  s_mess = s_mess + "\n";
@@ -82,6 +91,7 @@ public class ClientThread extends JFrame implements Runnable {
                 } catch (Exception e) {
                     game_serv.echo_chat(this, Username + " has disconnected.", "j");
                     game_serv.update_clients_box('r', this);
+                    game_serv.remove_client(place);
                     System.out.println(e);
                     break;
                 }

@@ -13,7 +13,6 @@ import java.awt.event.*;
 import java.util.Locale;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
-import org.omg.CORBA.Environment;
 
 /**
  *
@@ -34,6 +33,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 //    protected byte[] rec_data = new byte[1500];
     protected InetAddress serv_ip;
     // variables for the GUI
+    public String default_game = "Please type Start to select a game: \n";
     protected JTextArea game_text, chat_text, chat_message, game_command;
     protected JButton send_command, send_message;
     protected JLabel game_lbl, chat_lbl, spacer_lbl_recieve, spacer_lbl_send;
@@ -48,7 +48,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         serv_socket = sock;
         server_thread.start();
         ChatGui(900, 320, "Game and Chat Hub");
-        game_text.append("Please Type Start to select a game: \n");
+        game_text.append(default_game);
     }
 
     public void ChatGui(int width, int height, String title) {
@@ -82,10 +82,10 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             public void keyPressed(KeyEvent e) {
                 try {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                        if(!chat_message.getText().equals("")){
-                        e.consume();
-                        send_message_func();
-                        }else{
+                        if (!chat_message.getText().equals("")) {
+                            e.consume();
+                            send_message_func();
+                        } else {
                             e.consume();
                             chat_message.setText("");
                         }
@@ -113,10 +113,10 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             public void keyPressed(KeyEvent e) {
                 try {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                        if(!game_command.getText().equals("")){
-                        e.consume();
-                        send_command_func();
-                        }else{
+                        if (!game_command.getText().equals("")) {
+                            e.consume();
+                            send_command_func();
+                        } else {
                             e.consume();
                             game_command.setText("");
                         }
@@ -172,13 +172,13 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         if (e.getSource().equals(send_command)) {
             if (!game_command.getText().equals("")) {
                 send_command_func();
-            }else{
+            } else {
                 game_command.setText("");
             }
         } else if (e.getSource().equals(send_message)) {
             if (!chat_message.getText().equals("")) {
                 send_message_func();
-            }else{
+            } else {
                 chat_message.setText("");
             }
         }
@@ -204,21 +204,27 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     public void send_command_func() {
         String command;
         try {
-            command = game_command.getText();
-            game_text.append(command + "\n");
-            to_server.writeBytes("g" + command + "\n");
-            game_command.setText("");
+            if (game_command.getText().toLowerCase().equals("clear")) {
+                game_text.setText(default_game);
+            } else {
+                command = game_command.getText();
+                game_text.append(command + "\n");
+                to_server.writeBytes("g" + command + "\n");
+                game_command.setText("");
+            }
 
-        } catch (Exception e) {
-
+        } catch (Exception er) {
+            game_text.append(er.toString());
         }
     }
 
-    private void kicked(){
-       JOptionPane warning = new JOptionPane("You Have been kicked from the server!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
-                    JOptionPane.showMessageDialog(warning, "You have been kicked");
-                    System.exit(-1); 
+    private void kicked() {
+        this.setVisible(false);
+        JOptionPane warning = new JOptionPane("You Have been kicked from the server!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
+        JOptionPane.showMessageDialog(warning, "You have been kicked");
+        System.exit(-1);
     }
+
     @Override
     public void run() {
         String s_mess;
@@ -238,14 +244,13 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                 s_mess = from_server.readLine();
 
                 if (s_mess == null) {
-                   kicked();
+                    kicked();
                 }
                 if (s_mess.charAt(0) == 'c') {
                     chat_text.append(s_mess.substring(1) + "\n");
-                }else if (s_mess.charAt(0) == 'k'){
-                   kicked();
-                }
-                else  {
+                } else if (s_mess.charAt(0) == 'k') {
+                    kicked();
+                } else {
                     game_text.append(s_mess.substring(1) + "\n");
                 }
 
