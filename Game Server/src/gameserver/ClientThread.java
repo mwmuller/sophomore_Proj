@@ -5,6 +5,7 @@
  */
 package gameserver;
 
+import static gameserver.GameServer.to_client;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
@@ -59,6 +60,15 @@ public class ClientThread extends JFrame implements Runnable {
     public void set_usernm(String usernm) {
         Username = usernm;
     }
+    public void In_game_messages(String command) throws IOException {
+        to_client = new DataOutputStream((Cli_socket.getOutputStream()));
+        if (command.toLowerCase().equals("start")) {
+            to_client.writeBytes("gThere are no games fool!\n");
+        }
+    }
+    public void out_game_messages(){ // keeps track of the outgoing game messages
+        
+    }
 
     @Override
     public void run() {
@@ -82,7 +92,7 @@ public class ClientThread extends JFrame implements Runnable {
                     c_mess = from_client.readLine();
                     // c_mess = new String(rec_pack.getData());
                     if (c_mess.charAt(0) == 'g') {
-                        game_serv.In_game_messages(this, c_mess.substring(1));
+                        In_game_messages(c_mess.substring(1));
                     } else {
                         s_mess = c_mess.substring(1);
                         //  s_mess = s_mess + "\n";
