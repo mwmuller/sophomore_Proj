@@ -13,8 +13,6 @@ import java.awt.event.*;
 import java.util.Locale;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
-import org.omg.CORBA.Environment;
-
 /**
  *
  * @author mike
