@@ -13,10 +13,7 @@ import java.awt.event.*;
 import java.util.Locale;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
-<<<<<<< HEAD
-=======
 
->>>>>>> 42a3cd292c67ab7a619d7da34967af06909dd79f
 /**
  *
  * @author mike

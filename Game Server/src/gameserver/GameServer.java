@@ -233,18 +233,21 @@ public class GameServer {
         }
     }
 
-    public static void game_chat(ClientThread cli, String command) throws IOException {
+    public static void In_game_messages(ClientThread cli, String command) throws IOException {
         to_client = new DataOutputStream((cli.get_socket().getOutputStream()));
         if (command.toLowerCase().equals("start")) {
             to_client.writeBytes("gThere are no games fool!\n");
         }
     }
-
-    public static void make_group(ClientThread cli) {
-        // will add users to a group adn keep track of all 
+    public static void out_game_messages(){ // keeps track of the outgoing game messages
+        
     }
 
-    public static void record_chat(String message) {
+    public static void make_group(ClientThread cli) {
+        // will add users to a group and keep track of all 
+    }
 
+    public static void record_chat(String message) { // beta
+        
     }
 }

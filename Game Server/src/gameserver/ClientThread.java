@@ -82,7 +82,7 @@ public class ClientThread extends JFrame implements Runnable {
                     c_mess = from_client.readLine();
                     // c_mess = new String(rec_pack.getData());
                     if (c_mess.charAt(0) == 'g') {
-                        game_serv.game_chat(this, c_mess.substring(1));
+                        game_serv.In_game_messages(this, c_mess.substring(1));
                     } else {
                         s_mess = c_mess.substring(1);
                         //  s_mess = s_mess + "\n";
