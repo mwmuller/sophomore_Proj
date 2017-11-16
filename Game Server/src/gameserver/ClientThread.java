@@ -5,7 +5,6 @@
  */
 package gameserver;
 
-import static gameserver.GameServer.to_client;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
@@ -19,14 +18,18 @@ import javax.swing.*;
  */
 public class ClientThread extends JFrame implements Runnable {
 
-    // private DatagramSocket Cli_socket;
+    private boolean game_run = false;
     private Socket Cli_socket;
+    private GameThread run_games;
+    private String current_Game;
+    private DataOutputStream to_game_client;
+    protected String[] game_names = {"snake", "code", "sticks", "cards"};
     protected BufferedReader from_client;
     // private DatagramPacket rec_pack;
     protected InetAddress client_ip;
     private String Username;
     private int place;
-    private Thread client_thread;
+    private Thread client_thread, game_thread;
     private GameServer game_serv = new GameServer();
 
     ClientThread(Socket socket, String user_nm, int index) { // populated
@@ -60,24 +63,46 @@ public class ClientThread extends JFrame implements Runnable {
     public void set_usernm(String usernm) {
         Username = usernm;
     }
+    public void games(String command){
+        
+    }
     public void In_game_messages(String command) throws IOException {
-        to_client = new DataOutputStream((Cli_socket.getOutputStream()));
+        Scanner input = new Scanner(System.in);
+        int game_selection;
+        boolean valid = false;
+        String input_to_game;
         if (command.toLowerCase().equals("start")) {
-            to_client.writeBytes("gThere are no games fool!\n");
+            run_games = new GameThread(Cli_socket);
+            game_run = true;
         }
     }
-    public void out_game_messages(){ // keeps track of the outgoing game messages
-        
+
+    public void handle_game_text(String from_game) throws IOException{
+        String[] args = {""};
+        switch (current_Game) {
+            case "snake":
+                out_game_messages("play_snake");
+                break;
+            case "code":
+                //go to quest for holy code
+                break;
+            case "sticks":
+                //go to battlesticks
+                break;
+            case "cards":
+                // go to the card game
+                break;
+        }
+    }
+
+    public void out_game_messages(String msg) throws IOException{ // keeps track of the outgoing game messages
+        to_game_client.writeBytes(msg);
     }
 
     @Override
     public void run() {
         String c_mess, s_mess;
         try { // Gets messages from the clients
-
-//            rec_pack = new DatagramPacket(rec_data, rec_data.length);
-//            Cli_socket.receive(rec_pack);
-//            Username = new String(rec_pack.getData());
             from_client = new BufferedReader(new InputStreamReader(Cli_socket.getInputStream()));
             // reads in the username if they join the chat
             Username = from_client.readLine();
@@ -86,16 +111,11 @@ public class ClientThread extends JFrame implements Runnable {
             game_serv.update_clients_box('a', this);
             while (true) { // handles the constant chat until they disconnect
                 try {
-//                    rec_data = new byte[1500];
-//                    rec_pack = new DatagramPacket(rec_data, rec_data.length);
-//                    Cli_socket.receive(rec_pack);
                     c_mess = from_client.readLine();
-                    // c_mess = new String(rec_pack.getData());
                     if (c_mess.charAt(0) == 'g') {
                         In_game_messages(c_mess.substring(1));
                     } else {
                         s_mess = c_mess.substring(1);
-                        //  s_mess = s_mess + "\n";
                         game_serv.echo_chat(this, s_mess, "c");
                     }
                 } catch (Exception e) {

@@ -24,8 +24,6 @@ class GameClient {
     public static void main(String[] args) throws Exception {
         String username = "";
         int port = 1234;
-
-        SnakeFrame.main(args); // Tests snake game
         try {
             while (username.equals("") || username.length() < 3 || username.length() > 15) {
                 username = JOptionPane.showInputDialog("Please enter a username for the chat.");

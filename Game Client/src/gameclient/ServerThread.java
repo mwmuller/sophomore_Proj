@@ -10,7 +10,6 @@ import java.net.*;
 import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Locale;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import Snake.*;
@@ -23,18 +22,15 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 
     // variables for the thread
     private Thread server_thread;
-//    private DatagramSocket serv_socket;
     private DataOutputStream to_server;
     private Socket serv_socket;
     private String Username = "";
     private BufferedReader from_server;
     private int port;
-//    protected DatagramPacket rec_pack, send_pack;
-//    protected byte[] send_data = new byte[1500];
-//    protected byte[] rec_data = new byte[1500];
     protected InetAddress serv_ip;
+    protected JOptionPane enter_IP;
     // variables for the GUI
-    public String default_game = "Please type Start to select a game: \n";
+    public String default_game = "Please type 'Start' to select a game: \n";
     protected JTextArea game_text, chat_text, chat_message, game_command;
     protected JButton send_command, send_message;
     protected JLabel game_lbl, chat_lbl, spacer_lbl_recieve, spacer_lbl_send;
@@ -58,7 +54,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         this.setSize(width, height);
         this.setResizable(false);
         this.setLayout(new BorderLayout());
-        this.setTitle("Game and Chat Hub");
+        this.setTitle("Game and Chat Hub. Your Ip is ");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // defining the different compnents of the JFrame
         //Text areas and scrolling capability
@@ -191,10 +187,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         try {
             message = chat_message.getText();
             to_server.writeBytes("c" + message + "\n");
-            //  send_data = message.getBytes();
             chat_text.append(message + "\n");
-            // send_pack = new DatagramPacket(send_data, send_data.length, serv_ip, port);
-            // serv_socket.send(send_pack);
             chat_message.setText("");
         } catch (Exception e) {
             System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
@@ -233,9 +226,6 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         try { // Send your usern ame to the Server to store it 
             from_server = new BufferedReader(new InputStreamReader(serv_socket.getInputStream()));
             to_server = new DataOutputStream((serv_socket.getOutputStream()));
-//            send_data = Username.getBytes();
-//            send_pack = new DatagramPacket(send_data, send_data.length, serv_ip, port);
-//            serv_socket.send(send_pack);
         } catch (Exception ei) {
             System.out.println("Not wroking");
         }
@@ -252,13 +242,14 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                 } else if (s_mess.charAt(0) == 'k') {
                     kicked();
                 } else {
-                    game_text.append(s_mess.substring(1) + "\n");
+                    if (s_mess.substring(1).equals("play_snake")) {
+                      SnakeFrame snake = new SnakeFrame();
+                    } else if (s_mess.substring(1).equals("_reset_")) {
+                        game_text.setText(default_game);
+                    } else {
+                        game_text.append(s_mess.substring(1) + "\n");
+                    }
                 }
-
-//                rec_data = new byte[1500];
-//                rec_pack = new DatagramPacket(rec_data, rec_data.length);
-//                serv_socket.receive(rec_pack);
-//                s_mess = new String(rec_pack.getData());
             } catch (Exception e) {
                 System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
                 System.out.println(e);
@@ -266,23 +257,5 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             }
         }
 
-    }
-
-    public void handle_game_text(String from_game, String game_name) {
-        String[] args = {""};
-        switch (game_name) {
-            case "snake":
-                SnakeFrame.main(args);
-                break;
-            case "code":
-                //go to quest for holy code
-                break;
-            case "sticks":
-                //go to battlesticks
-                break;
-            case "cards":
-                // go to the card game
-                break;
-        }
     }
 }
