@@ -8,7 +8,6 @@ package gameclient;
 import javax.swing.*;
 import java.net.*;
 import java.io.*;
-import Snake.*;
 
 class GameClient {
 

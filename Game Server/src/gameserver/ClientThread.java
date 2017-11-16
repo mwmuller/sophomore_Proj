@@ -67,37 +67,14 @@ public class ClientThread extends JFrame implements Runnable {
         
     }
     public void In_game_messages(String command) throws IOException {
-        Scanner input = new Scanner(System.in);
-        int game_selection;
-        boolean valid = false;
-        String input_to_game;
-        if (command.toLowerCase().equals("start")) {
-            run_games = new GameThread(Cli_socket);
+        if (command.toLowerCase().equals("start") && !game_run) {
+            run_games = new GameThread(Cli_socket, "");
             game_run = true;
+        }else{
+            run_games.in_message(command);
         }
     }
 
-    public void handle_game_text(String from_game) throws IOException{
-        String[] args = {""};
-        switch (current_Game) {
-            case "snake":
-                out_game_messages("play_snake");
-                break;
-            case "code":
-                //go to quest for holy code
-                break;
-            case "sticks":
-                //go to battlesticks
-                break;
-            case "cards":
-                // go to the card game
-                break;
-        }
-    }
-
-    public void out_game_messages(String msg) throws IOException{ // keeps track of the outgoing game messages
-        to_game_client.writeBytes(msg);
-    }
 
     @Override
     public void run() {
