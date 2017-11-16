@@ -13,6 +13,7 @@ import java.awt.event.*;
 import java.util.Locale;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
+import Snake.*;
 
 /**
  *
@@ -265,5 +266,23 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             }
         }
 
+    }
+
+    public void handle_game_text(String from_game, String game_name) {
+        String[] args = {""};
+        switch (game_name) {
+            case "snake":
+                SnakeFrame.main(args);
+                break;
+            case "code":
+                //go to quest for holy code
+                break;
+            case "sticks":
+                //go to battlesticks
+                break;
+            case "cards":
+                // go to the card game
+                break;
+        }
     }
 }
