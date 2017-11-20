@@ -18,9 +18,8 @@ public class Guessgame {
     private Random rand;
     private GameThread game_thread;
 
-    public Guessgame(GameThread game_thread) throws IOException {
+    public Guessgame(GameThread game_thread) throws IOException{
         this.game_thread = game_thread;
-        this.game_thread.send_game_message("I am here");
         rand = new Random();
         start();
     }
@@ -34,7 +33,15 @@ public class Guessgame {
                 + "A Number has been picked so start guessing!\n\n"
                 + "Guess " + count + ": ");
         while(!valid){
+            try{
         guess = Integer.parseInt(game_thread.get_from_client());
+            }catch(Exception e){
+                try{
+                    Thread.sleep(1000);
+                }catch(Exception er){
+                    
+                }
+            }
         }
     }
 

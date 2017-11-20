@@ -63,18 +63,22 @@ public class ClientThread extends JFrame implements Runnable {
     public void set_usernm(String usernm) {
         Username = usernm;
     }
-    public void games(String command){
-        
+
+    public void games(String command) {
+
     }
+
     public void In_game_messages(String command) throws IOException {
         if (command.toLowerCase().equals("start") && !game_run) {
             run_games = new GameThread(Cli_socket, "");
             game_run = true;
-        }else{
+        } else if (game_run) {
             run_games.in_message(command);
+        } else {
+            game_serv.personal_game_mess(this, "Invalid Input.\n");
+            game_serv.personal_game_mess(this, "_reset_\n");
         }
     }
-
 
     @Override
     public void run() {

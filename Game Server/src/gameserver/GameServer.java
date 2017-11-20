@@ -12,7 +12,7 @@ public class GameServer {
 
     private static int max = 100;
     private static ClientThread[] Clients_arr = new ClientThread[max];
-    private static int connected = 0;
+    private static int connected = 0, max_index = 0;
     protected static String[] Inet_addr;
     // protected static DatagramPacket rec_pack, send_pack;
     protected static DataOutputStream to_client;
@@ -160,19 +160,12 @@ public class GameServer {
         }
     }
 
-//    public static void rewrite_arr(){
-//        for(int i = 0; i < max_index; i++){
-//            if(Clients_arr[i])
-//        }
-//        
-//    }
     public static void kick(String usernm) { // kicks client
         for (int i = 0; i < connected; i++) {
             try {
                 if (Clients_arr[i].get_usernm().equals(usernm)) {
                     update_clients_box('r', Clients_arr[i]);
                     to_client = new DataOutputStream((Clients_arr[i].get_socket().getOutputStream()));
-                    // Clients_arr[i].sets
                     to_client.writeBytes("k\n");
                     remove_client(i);
                 }
@@ -185,9 +178,16 @@ public class GameServer {
     public static void remove_client(int index) {
         for (int i = index; i < connected; i++) {
             Clients_arr[i] = Clients_arr[i + 1];
-            Clients_arr[i].set_place(i);
+            if (connected > 1) {
+                Clients_arr[i].set_place(i);
+            }
         }
         connected--;
+    }
+
+    public static void personal_game_mess(ClientThread cli, String msg) throws IOException {
+        DataOutputStream to_cli_per = new DataOutputStream(cli.get_socket().getOutputStream());
+        to_cli_per.writeBytes("g" + msg);
     }
 
     public static void echo_chat(ClientThread client, String message, String joined_chat) throws IOException {
@@ -222,12 +222,11 @@ public class GameServer {
         }
     }
 
-
     public static void make_group(ClientThread cli) {
         // will add users to a group and keep track of all 
     }
 
     public static void record_chat(String message) { // beta
-        
+
     }
 }

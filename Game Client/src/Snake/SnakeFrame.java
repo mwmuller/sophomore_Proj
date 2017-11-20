@@ -17,7 +17,7 @@ import java.awt.GridLayout;
 public class SnakeFrame extends JFrame {
     
     public SnakeFrame() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Snake Game");
         setResizable(false);
         

@@ -29,7 +29,7 @@ public class GameThread implements Runnable {
             + "(3) Sticks Arena\n"
             + "(4) Card Game\n"
             + "(5) Guess Game\n"
-            + "(6) End";
+            + "(6) End\n";
 
     public GameThread(Socket cli_sock, String game) throws IOException {
         Cli_socket = cli_sock;
@@ -42,7 +42,7 @@ public class GameThread implements Runnable {
     public void select_game(int game_choice) throws IOException {
         switch (game_choice) {
             case 1:
-                send_game_message("play_snake");
+                send_game_message("play_snake\n");
                 current_game = "snake";
                 game_state = "playing";
                 break;
@@ -85,13 +85,12 @@ public class GameThread implements Runnable {
             while (true) {
                 if (from_client.equals("_") || game_state.equals("playing")) {
                     Thread.sleep(1000);
-                    System.out.println("run_sleep");
                 } else if (game_state.equals("select")) {
-                    System.out.println("run_select");
                     boolean valid = false;
                     while (!valid) {
                         try {
                             select_game(Integer.parseInt(from_client));
+                            from_client = "_";
                             valid = true;
                         } catch (Exception e) {
                             to_client.writeBytes("gInvalid Selection or Input!\n" + games);
