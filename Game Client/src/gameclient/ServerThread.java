@@ -226,7 +226,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                 } else if(msg.equals("_clear_")) {
                     game_text.setText("");
                 }else {
-                    game_text.append(msg);
+                    game_text.append(msg + "\n");
                 }
         }catch(Exception e){
             
@@ -234,7 +234,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     }
     @Override
     public void run() {
-        String s_mess;
+        String s_mess = "";
 
         try { // Send your usern ame to the Server to store it 
             from_server = new BufferedReader(new InputStreamReader(serv_socket.getInputStream()));
@@ -245,10 +245,10 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 
         while (true) {
             try { // Get the messages from the server or from other users
-                do{
-                s_mess = from_server.readLine();
-                s_mess += s_mess;
-                }while(s_mess.equals(null));
+                
+          
+              s_mess = from_server.readLine();
+                System.out.println(s_mess + "\n");
                 if (s_mess == null) {
                     kicked();
                 }
@@ -262,7 +262,6 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             } catch (Exception e) {
                 System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
                 System.out.println(e);
-                System.exit(-1);
             }
         }
 

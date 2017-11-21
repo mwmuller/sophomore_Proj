@@ -24,12 +24,12 @@ public class GameThread implements Runnable {
     private boolean game_selected = false;
     private String game_state = "select";
     public String games = "Please make a game Selection: \n"
-            + "(1) Snake Game\n"
-            + "(2) Quest for the Holy Code\n"
-            + "(3) Sticks Arena\n"
-            + "(4) Card Game\n"
-            + "(5) Guess Game\n"
-            + "(6) End\n";
+            + "g(1) Snake Game\n"
+            + "g(2) Quest for the Holy Code\n"
+            + "g(3) Sticks Arena\n"
+            + "g(4) Card Game\n"
+            + "g(5) Guess Game\n"
+            + "g(6) End\n";
 
     public GameThread(Socket cli_sock, String game) throws IOException {
         Cli_socket = cli_sock;
@@ -42,9 +42,10 @@ public class GameThread implements Runnable {
     public void select_game(int game_choice) throws IOException {
         switch (game_choice) {
             case 1:
-                send_game_message("play_snake\n");
+                send_game_message("play_snake");
                 current_game = "snake";
                 game_state = "playing";
+                send_game_message("_clear_");
                 send_game_message(games);
                 break;
             case 2:
@@ -58,10 +59,15 @@ public class GameThread implements Runnable {
                 break;
             case 5:
                 game_class = new Guessgame(this);
-                System.out.println("Games");
                 current_game = "guess";
                 game_state = "playing";
                 break;
+            case 6:
+                send_game_message("_reset_\n");
+                break;
+            default:
+                send_game_message("_clear_\n");
+                send_game_message(games);
         }
     }
 
@@ -87,14 +93,16 @@ public class GameThread implements Runnable {
                 if (from_client.equals("_") || game_state.equals("playing")) {
                     Thread.sleep(1000);
                 } else if (game_state.equals("select")) {
-                    boolean valid = false;
-                    while (!valid) {
+                    boolean valid = true;
+                    while (valid) {
                         try {
                             select_game(Integer.parseInt(from_client));
                             from_client = "_";
-                            valid = true;
                         } catch (Exception e) {
+                            to_client.writeBytes("_clear_\n");
                             to_client.writeBytes("gInvalid Selection or Input!\n" + games);
+                            from_client = "_";
+                            break;
                         }
                     }
                 } else {
