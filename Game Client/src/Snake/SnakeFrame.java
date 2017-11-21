@@ -13,21 +13,26 @@ import javax.swing.JFrame;
 import Snake.Screen;
 
 import java.awt.GridLayout;
+import javax.swing.JOptionPane;
 
-public class SnakeFrame extends JFrame {
+public class SnakeFrame extends JFrame{
     
     public SnakeFrame() {
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Snake Game");
         setResizable(false);
         
         init();
     }
     
+    public void stop() {
+       JOptionPane warning = new JOptionPane("Game over!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
+        JOptionPane.showMessageDialog(warning, "Game over!");
+        this.dispose();
+    }
     public void init() {
         setLayout(new GridLayout(1, 1, 0, 0));
         
-        Screen s = new Screen();
+        Screen s = new Screen(this);
         add(s);
         
         pack();

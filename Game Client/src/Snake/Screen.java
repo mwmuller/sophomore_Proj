@@ -17,6 +17,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
+import javax.swing.JOptionPane;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import SnakeEnts.*;
@@ -36,7 +37,8 @@ public class Screen extends JPanel implements Runnable {
 
     private Apple apple;
     private ArrayList<Apple> apples;
-
+    
+    private SnakeFrame snake_frame;
     private Random r;
 
     private int xCoor = 10, yCoor = 10;
@@ -48,7 +50,8 @@ public class Screen extends JPanel implements Runnable {
 
     private Key key;
 
-    public Screen() {
+    public Screen(SnakeFrame sf) {
+        snake_frame = sf;
         setFocusable(true);
         key = new Key();
         addKeyListener(key);
@@ -88,13 +91,16 @@ public class Screen extends JPanel implements Runnable {
         for (int i = 0; i < snake.size(); i++) {
             if (xCoor == snake.get(i).getxCoor() && yCoor == snake.get(i).getyCoor()) {
                 if (i != snake.size() - 1) {
-                    stop();
+                    snake_frame.stop();
+                    running = false;
+                    break;
                 }
             }
         }
 
         if (xCoor < 0 || xCoor > 79 || yCoor < 0 || yCoor > 79) {
-            stop();
+            snake_frame.stop();
+            running = false;
         }
 
         ticks++;
@@ -152,14 +158,6 @@ public class Screen extends JPanel implements Runnable {
         thread.start();
     }
 
-    public void stop() {
-        running = false;
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void run() {
         while (running) {
