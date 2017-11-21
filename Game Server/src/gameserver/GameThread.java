@@ -42,10 +42,10 @@ public class GameThread implements Runnable {
     public void select_game(int game_choice) throws IOException {
         switch (game_choice) {
             case 1:
-                send_game_message("play_snake");
+                send_game_message("play_snake\n");
                 current_game = "snake";
                 game_state = "playing";
-                send_game_message("_clear_");
+                send_game_message("_clear_\n");
                 send_game_message(games);
                 break;
             case 2:
@@ -68,6 +68,7 @@ public class GameThread implements Runnable {
             default:
                 send_game_message("_clear_\n");
                 send_game_message(games);
+                
         }
     }
 
@@ -93,13 +94,13 @@ public class GameThread implements Runnable {
                 if (from_client.equals("_") || game_state.equals("playing")) {
                     Thread.sleep(1000);
                 } else if (game_state.equals("select")) {
-                    boolean valid = true;
-                    while (valid) {
+                    while (true) {
                         try {
                             select_game(Integer.parseInt(from_client));
                             from_client = "_";
+                            break;
                         } catch (Exception e) {
-                            to_client.writeBytes("_clear_\n");
+                            to_client.writeBytes("g_clear_\n");
                             to_client.writeBytes("gInvalid Selection or Input!\n" + games);
                             from_client = "_";
                             break;

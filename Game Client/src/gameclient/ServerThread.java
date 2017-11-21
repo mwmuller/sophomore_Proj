@@ -192,8 +192,9 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             chat_text.append(message + "\n");
             chat_message.setText("");
         } catch (Exception e) {
-            System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
-            System.out.println(e);
+            JOptionPane warning = new JOptionPane("Oh No!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
+        JOptionPane.showMessageDialog(warning, "The server has closed. Please Reconnect!");
+            System.exit(3000);
         }
     }
 

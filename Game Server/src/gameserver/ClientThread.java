@@ -72,8 +72,8 @@ public class ClientThread extends JFrame implements Runnable {
         } else if (game_run) {
             run_games.in_message(command);
         } else {
-            game_serv.personal_game_mess(this, "gInvalid Input.\n");
-            game_serv.personal_game_mess(this, "g_reset_\n");
+            game_serv.personal_game_mess(this, "Invalid Input.\n");
+            game_serv.personal_game_mess(this, "_reset_\n");
         }
     }
 
