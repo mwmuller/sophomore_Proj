@@ -45,6 +45,7 @@ public class GameThread implements Runnable {
                 send_game_message("play_snake\n");
                 current_game = "snake";
                 game_state = "playing";
+                send_game_message(games);
                 break;
             case 2:
                 //go to quest for holy code

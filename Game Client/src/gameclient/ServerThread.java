@@ -24,10 +24,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     private Thread server_thread;
     private DataOutputStream to_server;
     private Socket serv_socket;
-    private String Username = "";
     private BufferedReader from_server;
     private int port;
     protected InetAddress serv_ip;
+    protected String[] cli_ip;
+    protected String my_ip;
     protected JOptionPane enter_IP;
     // variables for the GUI
     public String default_game = "Please type 'Start' to select a game: \n";
@@ -38,7 +39,8 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     protected JScrollPane scroll_chat, scroll_game, scroll_send_command, scroll_send_message;
 
     public ServerThread(Socket sock, String user_nm, InetAddress ip_addr, int port) throws IOException {
-        Username = user_nm;
+        cli_ip = InetAddress.getLocalHost().toString().split("/");
+        my_ip = cli_ip[1];
         this.port = port;
         serv_ip = ip_addr;
         server_thread = new Thread(this);
@@ -54,7 +56,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         this.setSize(width, height);
         this.setResizable(false);
         this.setLayout(new BorderLayout());
-        this.setTitle("Game and Chat Hub. Your Ip is ");
+        this.setTitle("Game and Chat Hub. Your Ip is: " + my_ip);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // defining the different compnents of the JFrame
         //Text areas and scrolling capability
@@ -198,15 +200,10 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     public void send_command_func() {
         String command;
         try {
-            if (game_command.getText().toLowerCase().equals("clear")) {
-                game_text.setText(default_game);
-            } else {
-                command = game_command.getText();
-                game_text.append(command + "\n");
-                to_server.writeBytes("g" + command + "\n");
-                game_command.setText("");
-            }
-
+            command = game_command.getText();
+            game_text.append(command + "\n");
+            to_server.writeBytes("g" + command + "\n");
+            game_command.setText("");
         } catch (Exception er) {
             game_text.append(er.toString());
         }
@@ -219,6 +216,22 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         System.exit(-1);
     }
 
+    public void handle_gamme_mess(String msg)
+    {
+        try{
+             if (msg.equals("play_snake")) {
+                    SnakeFrame snake = new SnakeFrame();
+                } else if (msg.equals("_reset_")) {
+                    game_text.setText(default_game);
+                } else if(msg.equals("_clear_")) {
+                    game_text.setText("");
+                }else {
+                    game_text.append(msg);
+                }
+        }catch(Exception e){
+            
+        }
+    }
     @Override
     public void run() {
         String s_mess;
@@ -232,8 +245,10 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 
         while (true) {
             try { // Get the messages from the server or from other users
+                do{
                 s_mess = from_server.readLine();
-
+                s_mess += s_mess;
+                }while(s_mess.equals(null));
                 if (s_mess == null) {
                     kicked();
                 }
@@ -241,14 +256,8 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                     chat_text.append(s_mess.substring(1) + "\n");
                 } else if (s_mess.charAt(0) == 'k') {
                     kicked();
-                } else {
-                    if (s_mess.substring(1).equals("play_snake")) {
-                      SnakeFrame snake = new SnakeFrame();
-                    } else if (s_mess.substring(1).equals("_reset_")) {
-                        game_text.setText(default_game);
-                    } else {
-                        game_text.append(s_mess.substring(1) + "\n");
-                    }
+                } else if (s_mess.charAt(0) == 'g'){
+                    handle_gamme_mess(s_mess.substring(1));
                 }
             } catch (Exception e) {
                 System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
