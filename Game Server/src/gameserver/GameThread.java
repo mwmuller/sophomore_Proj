@@ -44,7 +44,6 @@ public class GameThread implements Runnable {
             case 1:
                 send_game_message("play_snake\n");
                 current_game = "snake";
-                game_state = "playing";
                 send_game_message("_clear_\n");
                 send_game_message(games);
                 break;
@@ -74,6 +73,9 @@ public class GameThread implements Runnable {
 
     public String get_from_client() {
         return from_client;
+    }
+    public void set_game_state(String state){
+        game_state = state;
     }
 
     public void send_game_message(String msg) throws IOException {
