@@ -193,7 +193,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             chat_message.setText("");
         } catch (Exception e) {
             JOptionPane warning = new JOptionPane("Oh No!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
-        JOptionPane.showMessageDialog(warning, "The server has closed. Please Reconnect!");
+            JOptionPane.showMessageDialog(warning, "The server has closed. Please Reconnect!");
             System.exit(3000);
         }
     }
@@ -217,22 +217,22 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         System.exit(-1);
     }
 
-    public void handle_gamme_mess(String msg)
-    {
-        try{
-             if (msg.equals("play_snake")) {
-                    SnakeFrame snake = new SnakeFrame();
-                } else if (msg.equals("_reset_")) {
-                    game_text.setText(default_game);
-                } else if(msg.equals("_clear_")) {
-                    game_text.setText("");
-                }else {
-                    game_text.append(msg + "\n");
-                }
-        }catch(Exception e){
-            
+    public void handle_gamme_mess(String msg) {
+        try {
+            if (msg.equals("play_snake")) {
+                SnakeFrame snake = new SnakeFrame();
+            } else if (msg.equals("_reset_")) {
+                game_text.setText(default_game);
+            } else if (msg.equals("_clear_")) {
+                game_text.setText("");
+            } else {
+                game_text.append(msg + "\n");
+            }
+        } catch (Exception e) {
+
         }
     }
+
     @Override
     public void run() {
         String s_mess = "";
@@ -246,10 +246,8 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 
         while (true) {
             try { // Get the messages from the server or from other users
-                
-          
-              s_mess = from_server.readLine();
-                System.out.println(s_mess + "\n");
+
+                s_mess = from_server.readLine();
                 if (s_mess == null) {
                     kicked();
                 }
@@ -257,12 +255,13 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                     chat_text.append(s_mess.substring(1) + "\n");
                 } else if (s_mess.charAt(0) == 'k') {
                     kicked();
-                } else if (s_mess.charAt(0) == 'g'){
+                } else if (s_mess.charAt(0) == 'g') {
                     handle_gamme_mess(s_mess.substring(1));
                 }
             } catch (Exception e) {
-                System.out.println("Oh no! Connection to the server was lost. Please Reconnect.");
-                System.out.println(e);
+                JOptionPane warning = new JOptionPane("Oh No!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
+                JOptionPane.showMessageDialog(warning, "The server has closed. Please Reconnect!");
+                System.exit(3000);
             }
         }
 

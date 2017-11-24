@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.awt.event.*;
+import Cards.*;
 
 /**
  *
@@ -40,6 +41,7 @@ public class GameThread implements Runnable {
     }
 
     public void select_game(int game_choice) throws IOException {
+        String[] args; // calling main
         switch (game_choice) {
             case 1:
                 send_game_message("play_snake\n");
@@ -56,6 +58,9 @@ public class GameThread implements Runnable {
                 break;
             case 4:
                 // go to the card game
+                game_class = new Cards_Main(this);
+                current_game = "cards";
+                game_state = "playing";
                 break;
             case 5:
                 game_class = new Guessgame(this);
@@ -107,7 +112,7 @@ public class GameThread implements Runnable {
                         }
                     }
                 } else {
-
+                    
                 }
             }
         } catch (Exception e) {
