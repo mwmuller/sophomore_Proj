@@ -27,6 +27,7 @@ public class SnakeFrame extends JFrame{
     public void stop() {
        JOptionPane warning = new JOptionPane("Game over!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
         JOptionPane.showMessageDialog(warning, "Game over!");
+        
         this.dispose();
     }
     public void init() {

@@ -28,10 +28,16 @@ public class Guessgame {
         int count = 1, guess;
         boolean valid = false;
         game_thread.send_game_message("Welcome to the Guessing Game!\n"
-                + "You will be guessing a number between 1 and 100.\n"
-                + "You want the lowest score possible."
-                + "A Number has been picked so start guessing!\n\n"
-                + "Guess " + count + ": ");
+                + "gYou will be guessing a number between 1 and 100.\n"
+                + "gYou want the lowest score possible.\n"
+                + "gNumber being generated.");
+        try{
+        Thread.sleep(1500);
+        }catch(Exception er){
+            
+        }
+                game_thread.send_game_message("gA Number has been generated so start guessing!\n"
+                + "gGuess " + count + ": ");
         while (!valid) {
             try {
                 guess = Integer.parseInt(game_thread.get_from_client());
