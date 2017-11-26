@@ -69,7 +69,7 @@ public class Cards_Main {
     static int score = 0,
             powerChips = 3;
 
-    static boolean quit = false;
+    static boolean quit;
 
     // Output to user
     public static void DisplayIntro() throws IOException {
@@ -123,7 +123,7 @@ public class Cards_Main {
     public Cards_Main(GameThread game) throws IOException {
         game_thread = game;
         boolean bonus = true;
-
+        quit = false;
         deck = new Deck();
 
         slots = new Slot[3];
@@ -197,7 +197,7 @@ public class Cards_Main {
         }
         game_thread.send_game_message("_clear_\n");
         game_thread.send_game_message(game_thread.games);
-        game_thread.set_state("select\n");
+        game_thread.set_state("select");
     }
 
     // Output to user
