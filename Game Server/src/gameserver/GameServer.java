@@ -11,7 +11,9 @@ import javax.swing.event.*;
 public class GameServer {
 
     private static int max = 100;
+    private static int party_num = max / 2;
     private static ClientThread[] Clients_arr = new ClientThread[max];
+    private static ClientThread[] Client_party = new ClientThread[party_num];
     private static int connected = 0, max_index = 0;
     protected static String[] Inet_addr;
     // protected static DatagramPacket rec_pack, send_pack;
