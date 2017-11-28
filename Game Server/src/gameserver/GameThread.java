@@ -11,6 +11,8 @@ import java.net.*;
 import java.util.*;
 import java.awt.event.*;
 import Cards.*;
+import StickArena.TwentyOneSticks;
+import holycodegame.*;
 
 /**
  *
@@ -51,9 +53,13 @@ public class GameThread implements Runnable {
                 break;
             case 2:
                 //go to quest for holy code
+                send_game_message("_clear_\n");
+                send_game_message("holy\n");
                 break;
             case 3:
                 //go to battlesticks
+                send_game_message("_clear_\n");
+                game_class = new TwentyOneSticks(this);
                 break;
             case 4:
                 // go to the card game
@@ -71,14 +77,15 @@ public class GameThread implements Runnable {
             default:
                 send_game_message("_clear_\n");
                 send_game_message(games);
-                
+
         }
     }
 
     public String get_from_client() {
         return from_client;
     }
-    public void set_game_state(String state){
+
+    public void set_game_state(String state) {
         game_state = state;
     }
 
@@ -113,7 +120,7 @@ public class GameThread implements Runnable {
                         }
                     }
                 } else {
-                    
+
                 }
             }
         } catch (Exception e) {

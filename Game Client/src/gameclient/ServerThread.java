@@ -5,6 +5,7 @@
  */
 package gameclient;
 
+import HolyCode.HolyCode;
 import java.io.*;
 import java.net.*;
 import javax.swing.JFrame;
@@ -46,7 +47,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         server_thread = new Thread(this);
         serv_socket = sock;
         server_thread.start();
-        ChatGui(900, 320, "Game and Chat Hub");
+        ChatGui(900, 400, "Game and Chat Hub");
         game_text.append(default_game);
     }
 
@@ -60,11 +61,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // defining the different compnents of the JFrame
         //Text areas and scrolling capability
-        game_text = new JTextArea(15, 42);
+        game_text = new JTextArea(25, 42);
         game_text.setEditable(false);
         game_text.setLineWrap(true);
         scroll_game = new JScrollPane(game_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        chat_text = new JTextArea(15, 33);
+        chat_text = new JTextArea(25, 33);
         chat_text.append("Welcome to the Chat!\n");
         chat_text.setEditable(false);
         chat_text.setLineWrap(true);
@@ -219,14 +220,22 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
 
     public void handle_gamme_mess(String msg) {
         try {
-            if (msg.equals("play_snake")) {
-                SnakeFrame snake = new SnakeFrame();
-            } else if (msg.equals("_reset_")) {
-                game_text.setText(default_game);
-            } else if (msg.equals("_clear_")) {
-                game_text.setText("");
-            } else {
-                game_text.append(msg + "\n");
+            switch (msg) {
+                case "play_snake":
+                    SnakeFrame snake = new SnakeFrame();
+                    break;
+                case "_reset_":
+                    game_text.setText(default_game);
+                    break;
+                case "_clear_":
+                    game_text.setText("");
+                    break;
+                case "holy":
+                    HolyCode holy = new HolyCode(this);
+                    break;
+                default:
+                    game_text.append(msg + "\n");
+                    break;
             }
         } catch (Exception e) {
 
