@@ -97,32 +97,34 @@ public class Cards_Main {
 
     // Output to user
     public static void DisplayGame(Card c) throws IOException {
+        String game_str = "";
         game_thread.send_game_message("_clear_\n");
         game_thread.send_game_message("Current Card: " + c.GetName() + c.GetType() + "\n");
 
         game_thread.send_game_message("# of Power Chips: " + powerChips + "\n");
 
         for (int i = 0; i < slots.length; i++) {
-            game_thread.send_game_message("Slot " + (i + 1) + ": " + slots[i].GetTotal() + "\n");
+            game_str = "";
+            game_str = game_str + ("Slot " + (i + 1) + ": " + slots[i].GetTotal());
 
             if (slots[i].HasAce()) {
-                game_thread.send_game_message(" / " + slots[i].GetAceTotal() + "\n");
+                game_str = game_str + (" / " + slots[i].GetAceTotal());
             }
 
             if (slots[i].CheckSolid()) {
-                game_thread.send_game_message("\tsolid\n");
+                game_thread.send_game_message("solid\n");
             } else if (slots[i].CheckBroken()) {
-                game_thread.send_game_message("\tbroken\n");
+                game_thread.send_game_message("broken\n");
+            }else{
+                game_thread.send_game_message(game_str + "\n");
             }
-
-            game_thread.send_game_message("\t\n");
             slots[i].DisplaySlot();
         }
     }
 
     public Cards_Main(GameThread game) throws IOException {
         game_thread = game;
-        boolean bonus = true;
+        boolean bonus;
         quit = false;
         deck = new Deck();
 
@@ -135,6 +137,7 @@ public class Cards_Main {
         DisplayIntro();
 
         while (ans == 'Y' && !quit) {
+            bonus = true;
             score = 0;
 
             for (int i = 0; i < slots.length; i++) {
@@ -286,7 +289,6 @@ public class Cards_Main {
                     }
                     ans = Integer.parseInt(game_thread.get_from_client());
                     game_thread.in_message("a");
-                    System.out.println(ans);
                 } catch (Exception er) {
 
                 }
@@ -328,7 +330,6 @@ public class Cards_Main {
                     }
                     ans = Integer.parseInt(game_thread.get_from_client());
                     game_thread.in_message("a");
-                    System.out.println(ans);
                 } catch (Exception er) {
 
                 }
@@ -372,7 +373,6 @@ public class Cards_Main {
                         Thread.sleep(1000);
                     }
                     ans = game_thread.get_from_client();
-                    System.out.println(ans);
                 } catch (Exception er) {
 
                 }
@@ -411,7 +411,6 @@ public class Cards_Main {
                         Thread.sleep(1000);
                     }
                     ans = game_thread.get_from_client();
-                    System.out.println(ans);
                 } catch (Exception er) {
 
                 }

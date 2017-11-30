@@ -38,7 +38,6 @@ public class GameServer {
         String client_nm = "";
         Inet_addr = InetAddress.getLocalHost().toString().split("/");
         //ssock = DatagramSocket(387);
-        System.out.print(Inet_addr[1]);
         Serv_GUI(400, 550, "Chat Server " + Inet_addr[1]);
         ServerSocket ssock = new ServerSocket(1234);
         chat_area.append("Hosting at address: " + Inet_addr[1] + "\n");
@@ -103,7 +102,6 @@ public class GameServer {
                         }
                     }
                 } catch (Exception er) {
-                    System.out.println(er);
                 }
             }
 
@@ -124,10 +122,8 @@ public class GameServer {
                         }
                     } else if (e.getSource() == kick_client) {
                         kick(cli_box.getSelectedItem().toString());
-                        System.out.println("You kicked someone!");
                     }
                 } catch (Exception er) {
-                    System.out.println(er);
                 }
             }
         };
@@ -172,7 +168,6 @@ public class GameServer {
                     remove_client(i);
                 }
             } catch (Exception e) {
-                System.out.println("Issues kicking Client: " + Clients_arr[i].get_usernm());
             }
         }
     }
@@ -218,7 +213,6 @@ public class GameServer {
                     }
 
                 } catch (Exception e) {
-                    //System.out.println(e);
                 }
             }
         }

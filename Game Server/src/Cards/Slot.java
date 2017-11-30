@@ -1,4 +1,5 @@
 package Cards;
+
 /*
 Slot
 
@@ -29,181 +30,153 @@ int total       will use the 1 point Ace
 
 int ace_Total   will use the 11 point Ace
  */
-
 import java.util.LinkedList;
 import gameserver.*;
 import java.io.IOException;
 
-public class Slot 
-{
+public class Slot {
+
     private boolean solid,
-                    ace_Solid,
-                    broken,
-                    ace;
+            ace_Solid,
+            broken,
+            ace;
+    public String game_string = "";
     protected GameThread game_thread;
-                    
-    private int     total,
-                    ace_Total;
-    
+
+    private int total,
+            ace_Total;
+
     private LinkedList<Card> cards;
-    
+
     private char color, type;
-    
+
     private Scoring score = new Scoring();
-    
-    public Slot(GameThread game)
-    {
+
+    public Slot(GameThread game) {
         total = 0;
         ace_Total = 0;
         this.game_thread = game;
         solid = false;
         ace_Solid = false;
-        
+
         broken = false;
-        
+
         ace = false;
-        
+
         cards = new LinkedList<Card>();
     }
-    
-    public void AddCard(Card c)
-    {
-        if (cards.isEmpty())
-        {
+
+    public void AddCard(Card c) {
+        if (cards.isEmpty()) {
             color = c.GetColor();
             type = c.GetType();
         }
-        
+
         cards.add(c);
-        
+
         total += c.GetFace();
-        
-        if ("A".equals(c.GetName()))
-        {
+
+        if ("A".equals(c.GetName())) {
             ace = true;
             ace_Total += 11;
-        }
-        else
-        {
+        } else {
             ace_Total += c.GetFace();
         }
-        
-        if (total > 21)
-        {
+
+        if (total > 21) {
             broken = true;
-        }
-        else if (total == 21)
-        {
+        } else if (total == 21) {
             solid = true;
         }
-        
-        if (ace_Total == 21 && ace_Total != total)
-        {
+
+        if (ace_Total == 21 && ace_Total != total) {
             ace_Solid = true;
-        }
-        else
-        {
+        } else {
             ace_Solid = false;
         }
     }
-    
-    public boolean CheckBroken()
-    {
-        if (broken)
-        {
+
+    public boolean CheckBroken() {
+        if (broken) {
             return broken;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-    
-    public boolean CheckSolid()
-    {
-        if (solid)
-        {
+
+    public boolean CheckSolid() {
+        if (solid) {
             return solid;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-    
-    public boolean CheckAceSolid()
-    {
-        if (ace_Solid)
-        {
+
+    public boolean CheckAceSolid() {
+        if (ace_Solid) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-    
-    public int GetTotal()
-    {
+
+    public int GetTotal() {
         return total;
     }
-    
-    public int GetAceTotal()
-    {
+
+    public int GetAceTotal() {
         return ace_Total;
     }
-    
-    public boolean HasAce()
-    {
+
+    public boolean HasAce() {
         return ace;
     }
-    
-    public void MakeSolid()
-    {
+
+    public void MakeSolid() {
         solid = true;
     }
-    
-    public void EmptySlot()
-    {
+
+    public void EmptySlot() {
         cards.clear();
-        
+
         total = 0;
         ace_Total = 0;
-        
+
         solid = false;
         ace_Solid = false;
-        
+
         broken = false;
-        
+
         ace = false;
     }
-    
-    public int CalcScore()
-    {
-        if (solid)
-        {
+
+    public int CalcScore() {
+        if (solid) {
             return score.TotalBonus(score.CardBonus(cards), score.TypeBonus(type, cards), score.ColorBonus(color, cards),
                     150);
         }
         return score.TotalBonus(score.CardBonus(cards), score.TypeBonus(type, cards), score.ColorBonus(color, cards),
-                    0);
-        
+                0);
+
     }
-    
+
     // Output to the user
-    public void DisplaySlot() throws IOException
-    {   
+    public void DisplaySlot() throws IOException {
         Card c;
-        for(int i = 0; i < cards.size(); i++)
-        {
-            if (i > 0)
-            {
-                game_thread.send_game_message(", \n");
-            }
-            
+        int i;
+        String cards_str = "";
+        for (i = 0; i < cards.size(); i++) {
             //Can't do this for the actual game, removes the element from the list
             c = cards.get(i);
-            game_thread.send_game_message(c.GetName() + c.GetType() + "\n");
+            if (cards.size() == 1) {
+                game_thread.send_game_message(c.GetName() + c.GetType() + "\n");
+            } else {
+                cards_str = cards_str + (c.GetName() + c.GetType()) + ", ";
+            }
+        }
+        if (i >= 2) {
+            System.out.println(cards_str.substring(0, cards_str.length() - 2));
+            game_thread.send_game_message(cards_str.substring(0, cards_str.length() - 2) + "\n");
         }
     }
 }

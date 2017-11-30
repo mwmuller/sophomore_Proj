@@ -100,7 +100,6 @@ public class ClientThread extends JFrame implements Runnable {
                     game_serv.echo_chat(this, Username + " has disconnected.", "j");
                     game_serv.update_clients_box('r', this);
                     game_serv.remove_client(place);
-                    System.out.println(e);
                     break;
                 }
             }

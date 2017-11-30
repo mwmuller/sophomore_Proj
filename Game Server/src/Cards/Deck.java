@@ -36,6 +36,7 @@ public class Deck
     
     public Deck()
     {
+        index = 0;
         CreateDeck();
         
         //DisplayDeck();
@@ -81,7 +82,7 @@ public class Deck
     private void ShuffleDeck()
     {
         int n = deck.length;
-        
+        index = 0;
         Random random = new Random();
         
         random.nextInt();
