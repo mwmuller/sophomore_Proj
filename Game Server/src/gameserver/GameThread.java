@@ -30,8 +30,7 @@ public class GameThread implements Runnable {
             + "g(2) Quest for the Holy Code\n"
             + "g(3) Sticks Arena\n"
             + "g(4) Card Game\n"
-            + "g(5) Guess Game\n"
-            + "g(6) End\n";
+            + "g(5) End\n";
 
     public GameThread(Socket cli_sock, String game) throws IOException {
         Cli_socket = cli_sock;
@@ -66,11 +65,6 @@ public class GameThread implements Runnable {
                 game_class = new Cards_Main(this);
                 break;
             case 5:
-                game_class = new Guessgame(this);
-                current_game = "guess";
-                game_state = "playing";
-                break;
-            case 6:
                 send_game_message("_reset_\n");
                 break;
             default:
@@ -108,7 +102,6 @@ public class GameThread implements Runnable {
                 } else if (game_state.equals("select")) {
                     while (true) {
                         try {
-                            send_game_message("_clear_\n");
                             select_game(Integer.parseInt(from_client));
                             from_client = "_";
                             break;
