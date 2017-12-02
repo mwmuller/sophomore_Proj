@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package StickArena;
+package Arena;
 
 import java.util.Scanner;
-import gameserver.*;
 
 /**
  *
@@ -17,10 +16,8 @@ public class TwentyOneSticks {
     /**
      * @param args the command line arguments
      */
-    public GameThread game_thread;
 
-    public TwentyOneSticks(GameThread game) {
-        game_thread = game;
+    public TwentyOneSticks() {
         int numSticks = 21;
         System.out.println("Would you like to be first? (y/n)");
         Scanner input = new Scanner(System.in);
