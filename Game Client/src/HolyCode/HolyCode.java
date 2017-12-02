@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class HolyCode {
 
     static String name;
-    public static String input = "_";
+    public String input = "_";
     static String[] outcomes = {
         "You pull the Lever,and the floor opens up from underneath your feet, and you fall to your death ",
         "You died.....alone in a cave",
@@ -37,7 +37,9 @@ public class HolyCode {
 
     };
     public ServerThread serv_thread;
-
+    public void set_input(String in){
+        input = in;
+    }
     public HolyCode(ServerThread serv) throws IOException {
         serv_thread = serv;
         serv_thread.handle_gamme_mess("Welcome to THE QUEST FOR THE HOLY CODE    ");
