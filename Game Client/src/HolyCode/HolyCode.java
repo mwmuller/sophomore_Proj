@@ -13,10 +13,11 @@ import java.util.Scanner;
  *
  * @author Joe
  */
-public class HolyCode {
+public class HolyCode implements Runnable {
 
     static String name;
     public String input = "_";
+    public boolean playing = true;
     static String[] outcomes = {
         "You pull the Lever,and the floor opens up from underneath your feet, and you fall to your death ",
         "You died.....alone in a cave",
@@ -24,7 +25,7 @@ public class HolyCode {
     };
     static String[] story = {"You wake up in a dark room, and you can barely see. \nYou can 'look around', or 'call out for help' \n"
         + "What will you do?",
-        "You look around, and see a see a pile of hay with something shiny in it, and you see a lever on the wall next to you. \nYou may 'search the pile' or 'pull the lever'\n",
+        "You look around, and see a see a pile of hay with something shiny in it, and you see a lever on the wall next to you. \nYou may 'search the pile' or 'pull the lever'",
         "Inside the pile, and you find a key would you like to put it in the keyhole? \n'yes' or 'no'",
         "You can 'pull the lever' or 'die of boredom' ",
         "You call out for help, and a man screams from the room next to you. He says 'you will never leave. I have been here for years!!'\nYou may 'look around' or 'die of boredom'",
@@ -37,10 +38,10 @@ public class HolyCode {
 
     };
     public ServerThread serv_thread;
-    public void set_input(String in){
-        input = in;
-    }
+
     public HolyCode(ServerThread serv) throws IOException {
+        Thread holy_thread = new Thread(this);
+        holy_thread.start();
         serv_thread = serv;
         serv_thread.handle_gamme_mess("Welcome to THE QUEST FOR THE HOLY CODE    ");
         serv_thread.handle_gamme_mess("Enter your name: ");
@@ -53,6 +54,7 @@ public class HolyCode {
         }
         name = input;
         input = "_";
+        serv_thread.set_input("_");
         serv_thread.handle_gamme_mess("Welcome " + name + " lets start our journey together");
         try {
             Thread.sleep(1000);
@@ -102,13 +104,34 @@ public class HolyCode {
                 }
 
             } else {
+                serv_thread.handle_gamme_mess("clear_");
                 serv_thread.handle_gamme_mess("please make a valid selection");
             }
+            serv_thread.handle_gamme_mess("clear_");
             input = "_";
+            serv_thread.set_input("_");
+        }
+        hold();
+
+    }
+
+    public void hold() {
+        try {
+            Thread.sleep(2000);
+        } catch (Exception e) {
+
         }
     }
 
-    public void set_command(String msg) {
-        input = msg;
+    @Override
+    public void run() {
+        while (playing) {
+            try {
+                input = serv_thread.get_input();
+                Thread.sleep(1000);
+            } catch (Exception e) {
+
+            }
+        }
     }
 }

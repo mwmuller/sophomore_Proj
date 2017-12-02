@@ -11,7 +11,6 @@ import java.net.*;
 import java.util.*;
 import java.awt.event.*;
 import Cards.*;
-import holycodegame.*;
 
 /**
  *
@@ -67,10 +66,12 @@ public class GameThread implements Runnable {
             case 5:
                 send_game_message("_reset_\n");
                 break;
+            case 999:
+                send_game_message("_clear_\n");
+                send_game_message(games);
             default:
                 send_game_message("_clear_\n");
                 send_game_message(games);
-
         }
     }
 

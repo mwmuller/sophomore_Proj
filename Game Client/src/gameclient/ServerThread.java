@@ -31,7 +31,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     protected InetAddress serv_ip;
     protected String[] cli_ip;
     protected String my_ip;
-    String curr_game;
+    String curr_game = "", game_input = "_";
     protected JOptionPane enter_IP;
     // variables for the GUI
     public String default_game = "Please type 'Start' to select a game: \n";
@@ -200,14 +200,22 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             System.exit(3000);
         }
     }
-
+    public String get_input(){
+        return game_input;
+    }
+    public void set_input(String in){
+        game_input = in;
+    }
+    public void set_game(String game){
+        curr_game = "";
+    }
     public void send_command_func() {
         String command;
         try {
             command = game_command.getText();
             game_text.append(command + "\n");
             if(curr_game.equals("holy")){
-                holy.set_input(command);
+                game_input = command;
             }else{
             to_server.writeBytes("g" + command + "\n");
             }
@@ -239,6 +247,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                 case "holy":
                     curr_game = "holy";
                     holy = new HolyCode(this);
+                    to_server.writeBytes("g999\n");
                     break;
                 default:
                     game_text.append(msg + "\n");
