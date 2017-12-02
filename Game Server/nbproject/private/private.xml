@@ -2,10 +2,20 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
+            <file>file:/C:/Users/mike/Documents/GitHub/sophomore_Proj/Game%20Server/src/StickArena/TwentyOneSticks.java</file>
+            <file>file:/C:/Users/mike/Documents/GitHub/sophomore_Proj/Game%20Server/src/Cards/Slot.java</file>
+            <file>file:/C:/Users/mike/Documents/GitHub/sophomore_Proj/Game%20Server/src/gameserver/GameThread.java</file>
+            <file>file:/C:/Users/mike/Documents/GitHub/sophomore_Proj/Game%20Server/src/Cards/Cards_Main.java</file>
+            <file>file:/C:/Users/mike/Documents/GitHub/sophomore_Proj/Game%20Server/src/HolyCodeGame/HolyCode.java</file>
+            <file>file:/C:/Users/mike/Documents/GitHub/sophomore_Proj/Game%20Server/src/gameserver/ClientThread.java</file>
+            <file>file:/C:/Users/mike/Documents/GitHub/sophomore_Proj/Game%20Server/src/gameserver/GameServer.java</file>
+=======
             <file>file:/C:/Users/Michael%20Muller/Documents/GitHub/sophomore_Proj/Game%20Server/src/gameserver/GameServer.java</file>
             <file>file:/C:/Users/Michael%20Muller/Documents/GitHub/sophomore_Proj/Game%20Server/src/gameserver/GameThread.java</file>
             <file>file:/C:/Users/Michael%20Muller/Documents/GitHub/sophomore_Proj/Game%20Server/src/gameserver/ClientThread.java</file>
             <file>file:/C:/Users/Michael%20Muller/Documents/GitHub/sophomore_Proj/Game%20Server/src/gameserver/Guessgame.java</file>
+>>>>>>> 9834db84fc096a82d45c017c8a9d102ff7f5df79
         </group>
     </open-files>
 </project-private>
