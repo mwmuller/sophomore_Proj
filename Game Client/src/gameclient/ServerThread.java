@@ -204,6 +204,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         return game_input;
     }
     public void set_input(String in){
+        in.trim();
         game_input = in;
     }
     public void set_game(String game){
