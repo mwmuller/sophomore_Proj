@@ -49,7 +49,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         server_thread = new Thread(this);
         serv_socket = sock;
         server_thread.start();
-        ChatGui(900, 400, "Game and Chat Hub");
+        ChatGui(900, 450, "Game and Chat Hub");
         game_text.append(default_game);
     }
 
@@ -247,6 +247,8 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                     break;
                 case "holy":
                     curr_game = "holy";
+                    Thread holy_thread = new Thread(holy);
+                    holy_thread.start();
                     holy = new HolyCode(this);
                     to_server.writeBytes("g999\n");
                     break;

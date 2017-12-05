@@ -107,9 +107,14 @@ public class HolyCode implements Runnable {
                 serv_thread.handle_gamme_mess("clear_");
                 serv_thread.handle_gamme_mess("please make a valid selection");
             }
-            serv_thread.handle_gamme_mess("clear_");
+            serv_thread.handle_gamme_mess("_clear_");
             input = "_";
             serv_thread.set_input("_");
+        }
+        try{
+            Thread.sleep(2000);
+        }catch(Exception e){
+            
         }
         hold();
 
