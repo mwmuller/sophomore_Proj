@@ -58,7 +58,7 @@ import java.util.InputMismatchException;
 import gameserver.*;
 import java.io.IOException;
 
-public class Cards_Main {
+public class Cards_Main implements Runnable {
 
     static Scanner input = new Scanner(System.in);
     public static GameThread game_thread;
@@ -115,7 +115,7 @@ public class Cards_Main {
                 game_thread.send_game_message("solid\n");
             } else if (slots[i].CheckBroken()) {
                 game_thread.send_game_message("broken\n");
-            }else{
+            } else {
                 game_thread.send_game_message(game_str + "\n");
             }
             slots[i].DisplaySlot();
@@ -124,83 +124,8 @@ public class Cards_Main {
 
     public Cards_Main(GameThread game) throws IOException {
         game_thread = game;
-        boolean bonus;
-        quit = false;
-        deck = new Deck();
-
-        slots = new Slot[3];
-
-        Card crrnt;
-
-        char ans = 'Y';
-
-        DisplayIntro();
-
-        while (ans == 'Y' && !quit) {
-            bonus = true;
-            score = 0;
-
-            for (int i = 0; i < slots.length; i++) {
-                slots[i] = new Slot(game_thread);
-            }
-
-            while (!PlayGame()) {
-
-            }
-
-            if (!quit) {
-                crrnt = deck.GiveCard();
-
-                DisplayGame(crrnt);
-
-                score += DisplayScore();
-
-                for (int i = 0; i < slots.length; i++) {
-                    if (!slots[i].CheckSolid()) {
-                        bonus = false;
-                        break;
-                    }
-                }
-
-                if (bonus) {
-                    StartBonus();
-
-                    DisplayBonus();
-
-                    while (!PlayGame()) {
-
-                    }
-
-                    crrnt = deck.GiveCard();
-
-                    DisplayGame(crrnt);
-
-                    score += DisplayScore();
-                }
-
-                // Output to user
-                game_thread.send_game_message("FINAL SCORE: " + score + "\ng\n");
-
-                DisplayReplayQ();
-                ans = GetReplay();
-
-                if (ans == 'Y') {
-                    ResetGame();
-                }
-            }
-        }
-
-        // Output to user
-        game_thread.send_game_message("\ngTHANK YOU FOR PLAYING\ng\n");
-        game_thread.send_game_message("Sending you back to the game menu!\n");
-        try{
-            Thread.sleep(2000);
-        }catch(Exception e){
-            
-        }
-        game_thread.send_game_message("_clear_\n");
-        game_thread.send_game_message(game_thread.games);
-        game_thread.set_state("select");
+        Thread cards_thread = new Thread(this);
+        cards_thread.start();
     }
 
     // Output to user
@@ -518,5 +443,90 @@ public class Cards_Main {
         }
 
         return gameOver;
+    }
+
+    @Override
+    public void run() {
+        boolean bonus;
+        quit = false;
+        deck = new Deck();
+
+        slots = new Slot[3];
+
+        Card crrnt;
+
+        char ans = 'Y';
+        try {
+            DisplayIntro();
+
+            while (ans == 'Y' && !quit) {
+                bonus = true;
+                score = 0;
+
+                for (int i = 0; i < slots.length; i++) {
+                    slots[i] = new Slot(game_thread);
+                }
+
+                while (!PlayGame()) {
+
+                }
+
+                if (!quit) {
+                    crrnt = deck.GiveCard();
+
+                    DisplayGame(crrnt);
+
+                    score += DisplayScore();
+
+                    for (int i = 0; i < slots.length; i++) {
+                        if (!slots[i].CheckSolid()) {
+                            bonus = false;
+                            break;
+                        }
+                    }
+
+                    if (bonus) {
+                        StartBonus();
+
+                        DisplayBonus();
+
+                        while (!PlayGame()) {
+
+                        }
+
+                        crrnt = deck.GiveCard();
+
+                        DisplayGame(crrnt);
+
+                        score += DisplayScore();
+                    }
+
+                    // Output to user
+                    game_thread.send_game_message("FINAL SCORE: " + score + "\ng\n");
+
+                    DisplayReplayQ();
+                    ans = GetReplay();
+
+                    if (ans == 'Y') {
+                        ResetGame();
+                    }
+                }
+            }
+
+            // Output to user
+            game_thread.send_game_message("\ngTHANK YOU FOR PLAYING\ng\n");
+            game_thread.send_game_message("Sending you back to the game menu!\n");
+            try {
+                Thread.sleep(2000);
+            } catch (Exception e) {
+
+            }
+            game_thread.send_game_message("_clear_\n");
+            game_thread.send_game_message(game_thread.games);
+            game_thread.set_state("select");
+        } catch (Exception e) {
+
+        }
+
     }
 }

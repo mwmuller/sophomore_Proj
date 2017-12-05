@@ -119,7 +119,7 @@ public class HolyCode implements Runnable {
                 }
 
             } else {
-                serv_thread.handle_gamme_mess("clear_");
+                serv_thread.handle_gamme_mess("_clear_");
                 serv_thread.handle_gamme_mess("please make a valid selection");
             }
             serv_thread.handle_gamme_mess("_clear_");
@@ -132,6 +132,10 @@ public class HolyCode implements Runnable {
 
         }
         hold();
+        try {
+            serv_thread.send_from_game("g999\n");
+        } catch (Exception e) {
 
+        }
     }
 }

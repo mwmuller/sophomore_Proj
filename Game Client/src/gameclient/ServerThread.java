@@ -213,6 +213,9 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     public void set_game(String game) {
         curr_game = "";
     }
+    public void send_from_game(String msg) throws IOException{
+        to_server.writeBytes(msg);
+    }
 
     public void send_command_func() {
         String command;
@@ -251,8 +254,8 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                     break;
                 case "holy":
                     curr_game = "holy";
+                    //to_server.writeBytes("g999\n");
                     holy = new HolyCode(this);
-                    to_server.writeBytes("g999\n");
                     break;
                 default:
                     game_text.append(msg + "\n");
