@@ -43,10 +43,23 @@ public class HolyCode implements Runnable {
         Thread holy_thread = new Thread(this);
         holy_thread.start();
         serv_thread = serv;
+    }
+
+    public void hold() {
+        try {
+            Thread.sleep(2000);
+        } catch (Exception e) {
+
+        }
+    }
+
+    @Override
+    public void run() {
         serv_thread.handle_gamme_mess("Welcome to THE QUEST FOR THE HOLY CODE    ");
         serv_thread.handle_gamme_mess("Enter your name: ");
         while (input.equals("_")) {
             try {
+                input = serv_thread.get_input();
                 Thread.sleep(1000);
             } catch (Exception e) {
 
@@ -57,6 +70,7 @@ public class HolyCode implements Runnable {
         serv_thread.set_input("_");
         serv_thread.handle_gamme_mess("Welcome " + name + " lets start our journey together");
         try {
+            input = serv_thread.get_input();
             Thread.sleep(1000);
         } catch (Exception e) {
 
@@ -68,6 +82,7 @@ public class HolyCode implements Runnable {
             serv_thread.handle_gamme_mess(story[count]);
             while (input.equals("_")) {
                 try {
+                    input = serv_thread.get_input();
                     Thread.sleep(1000);
                 } catch (Exception e) {
 
@@ -111,32 +126,12 @@ public class HolyCode implements Runnable {
             input = "_";
             serv_thread.set_input("_");
         }
-        try{
-            Thread.sleep(2000);
-        }catch(Exception e){
-            
-        }
-        hold();
-
-    }
-
-    public void hold() {
         try {
             Thread.sleep(2000);
         } catch (Exception e) {
 
         }
-    }
+        hold();
 
-    @Override
-    public void run() {
-        while (playing) {
-            try {
-                input = serv_thread.get_input();
-                Thread.sleep(1000);
-            } catch (Exception e) {
-
-            }
-        }
     }
 }

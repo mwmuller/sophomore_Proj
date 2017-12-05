@@ -200,25 +200,29 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
             System.exit(3000);
         }
     }
-    public String get_input(){
+
+    public String get_input() {
         return game_input;
     }
-    public void set_input(String in){
+
+    public void set_input(String in) {
         in.trim();
         game_input = in;
     }
-    public void set_game(String game){
+
+    public void set_game(String game) {
         curr_game = "";
     }
+
     public void send_command_func() {
         String command;
         try {
             command = game_command.getText();
             game_text.append(command + "\n");
-            if(curr_game.equals("holy")){
+            if (curr_game.equals("holy")) {
                 game_input = command;
-            }else{
-            to_server.writeBytes("g" + command + "\n");
+            } else {
+                to_server.writeBytes("g" + command + "\n");
             }
             game_command.setText("");
         } catch (Exception er) {
@@ -247,8 +251,6 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                     break;
                 case "holy":
                     curr_game = "holy";
-                    Thread holy_thread = new Thread(holy);
-                    holy_thread.start();
                     holy = new HolyCode(this);
                     to_server.writeBytes("g999\n");
                     break;
