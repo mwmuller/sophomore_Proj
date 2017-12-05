@@ -168,18 +168,26 @@ public class GameServer {
                     remove_client(i);
                 }
             } catch (Exception e) {
+                
             }
         }
     }
 
     public static void remove_client(int index) {
-        for (int i = index; i < connected; i++) {
+        int i;
+        for (i = index; i < connected; i++) {
             Clients_arr[i] = Clients_arr[i + 1];
             if (connected > 1) {
+                try{
                 Clients_arr[i].set_place(i);
+                }catch(Exception e){
+                    
+                }
             }
         }
+        if(i > 0){
         connected--;
+        }
     }
 
     public static void personal_game_mess(ClientThread cli, String msg) throws IOException {

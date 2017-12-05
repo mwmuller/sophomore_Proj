@@ -43,10 +43,23 @@ public class HolyCode implements Runnable {
         Thread holy_thread = new Thread(this);
         holy_thread.start();
         serv_thread = serv;
+    }
+
+    public void hold() {
+        try {
+            Thread.sleep(2000);
+        } catch (Exception e) {
+
+        }
+    }
+
+    @Override
+    public void run() {
         serv_thread.handle_gamme_mess("Welcome to THE QUEST FOR THE HOLY CODE    ");
         serv_thread.handle_gamme_mess("Enter your name: ");
         while (input.equals("_")) {
             try {
+                input = serv_thread.get_input();
                 Thread.sleep(1000);
             } catch (Exception e) {
 
@@ -57,6 +70,7 @@ public class HolyCode implements Runnable {
         serv_thread.set_input("_");
         serv_thread.handle_gamme_mess("Welcome " + name + " lets start our journey together");
         try {
+            input = serv_thread.get_input();
             Thread.sleep(1000);
         } catch (Exception e) {
 
@@ -68,6 +82,7 @@ public class HolyCode implements Runnable {
             serv_thread.handle_gamme_mess(story[count]);
             while (input.equals("_")) {
                 try {
+                    input = serv_thread.get_input();
                     Thread.sleep(1000);
                 } catch (Exception e) {
 
@@ -104,34 +119,23 @@ public class HolyCode implements Runnable {
                 }
 
             } else {
-                serv_thread.handle_gamme_mess("clear_");
+                serv_thread.handle_gamme_mess("_clear_");
                 serv_thread.handle_gamme_mess("please make a valid selection");
             }
-            serv_thread.handle_gamme_mess("clear_");
+            serv_thread.handle_gamme_mess("_clear_");
             input = "_";
             serv_thread.set_input("_");
         }
-        hold();
-
-    }
-
-    public void hold() {
         try {
             Thread.sleep(2000);
         } catch (Exception e) {
 
         }
-    }
+        hold();
+        try {
+            serv_thread.send_from_game("g999\n");
+        } catch (Exception e) {
 
-    @Override
-    public void run() {
-        while (playing) {
-            try {
-                input = serv_thread.get_input();
-                Thread.sleep(1000);
-            } catch (Exception e) {
-
-            }
         }
     }
 }

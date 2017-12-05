@@ -62,6 +62,7 @@ public class GameThread implements Runnable {
                 // go to the card game
                 send_game_message("_clear_\n");
                 game_class = new Cards_Main(this);
+                game_state = "playing";
                 break;
             case 5:
                 send_game_message("_reset_\n");
