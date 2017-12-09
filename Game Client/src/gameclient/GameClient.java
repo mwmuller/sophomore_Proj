@@ -10,14 +10,10 @@ import java.net.*;
 import java.io.*;
 
 class GameClient {
-
     private static Socket client_socket, test_sock;
     private static ServerThread serv_thread;
     private static String ip = "";
     static DatagramPacket usernm_send;
-
-//    static byte[] buf = new byte[1024];
-//    static byte[] send = new byte[1024];
     protected static InetAddress serv_inet;
 
     public static void main(String[] args) throws Exception {

@@ -13,7 +13,6 @@ public class GameServer {
     private static int max = 100;
     private static int party_num = max / 2;
     private static ClientThread[] Clients_arr = new ClientThread[max];
-    private static ClientThread[] Client_party = new ClientThread[party_num];
     private static int connected = 0, max_index = 0;
     protected static String[] Inet_addr;
     // protected static DatagramPacket rec_pack, send_pack;
@@ -21,7 +20,6 @@ public class GameServer {
     // protected static DatagramSocket ssock;
     protected static ServerSocket ssock;
     protected static InetAddress client_ip;
-    protected Thread game_thread;
     // GUI Variables for the server
     protected static Object combo_holder = "No Clients";
     protected static JPanel west, south, east;
@@ -168,7 +166,7 @@ public class GameServer {
                     remove_client(i);
                 }
             } catch (Exception e) {
-                
+
             }
         }
     }
@@ -178,15 +176,15 @@ public class GameServer {
         for (i = index; i < connected; i++) {
             Clients_arr[i] = Clients_arr[i + 1];
             if (connected > 1) {
-                try{
-                Clients_arr[i].set_place(i);
-                }catch(Exception e){
-                    
+                try {
+                    Clients_arr[i].set_place(i);
+                } catch (Exception e) {
+
                 }
             }
         }
-        if(i > 0){
-        connected--;
+        if (i > 0) {
+            connected--;
         }
     }
 
@@ -224,13 +222,5 @@ public class GameServer {
                 }
             }
         }
-    }
-
-    public static void make_group(ClientThread cli) {
-        // will add users to a group and keep track of all 
-    }
-
-    public static void record_chat(String message) { // beta
-
     }
 }

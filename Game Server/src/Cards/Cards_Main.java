@@ -60,19 +60,19 @@ import java.io.IOException;
 
 public class Cards_Main implements Runnable {
 
-    static Scanner input = new Scanner(System.in);
-    public static GameThread game_thread;
-    static Slot[] slots;
+     Scanner input = new Scanner(System.in);
+    public GameThread game_thread;
+     Slot[] slots;
 
-    static Deck deck;
+     Deck deck;
 
-    static int score = 0,
+     int score = 0,
             powerChips = 3;
 
-    static boolean quit;
+     boolean quit;
 
     // Output to user
-    public static void DisplayIntro() throws IOException {
+    public void DisplayIntro() throws IOException {
         game_thread.send_game_message("Stockpile 21!\ngIn this game you will be given a card and need to place it in"
                 + " any of the slots available.\ngYou need to make it so each slot has a value of 21. BlackJack Rules!\n"
                 + "gYou have Power Chips that you can use to skip a card, but they are limited\n"
@@ -96,7 +96,7 @@ public class Cards_Main implements Runnable {
     }
 
     // Output to user
-    public static void DisplayGame(Card c) throws IOException {
+    public void DisplayGame(Card c) throws IOException {
         String game_str = "";
         game_thread.send_game_message("_clear_\n");
         game_thread.send_game_message("Current Card: " + c.GetName() + c.GetType() + "\n");
@@ -129,7 +129,7 @@ public class Cards_Main implements Runnable {
     }
 
     // Output to user
-    public static int DisplayScore() throws IOException {
+    public int DisplayScore() throws IOException {
         int[] scores = new int[slots.length];
 
         int total = 0;
@@ -156,7 +156,7 @@ public class Cards_Main implements Runnable {
     }
 
     // Output to user
-    public static void DisplayBonus() throws IOException {
+    public void DisplayBonus() throws IOException {
         game_thread.send_game_message("BONUS ROUND!!!\ngNow you will have to deal with a random card in each slot.\n"
                 + "gSame rules apply, but there are no Power Chips available!\ng\ngPress Enter to Start the Bonus Round\n");
 
@@ -171,29 +171,29 @@ public class Cards_Main implements Runnable {
     }
 
     // Output to user
-    public static void DisplayOptions() throws IOException {
+    public void DisplayOptions() throws IOException {
         game_thread.send_game_message("\ngOPTIONS:\ng0:\tEnd Game\ng1:\tAdd Card to a Slot\ng2:\tUse Power Chip"
                 + "\ng\ngWhat do you want to do?(Enter a Number from above)\n");
     }
 
     // Output to user
-    public static void DisplaySlotQ() throws IOException {
+    public  void DisplaySlotQ() throws IOException {
         game_thread.send_game_message("Which slot do you want to add the card to? (1-" + (slots.length) + ")\n");
     }
 
     // Output to user
-    public static void DisplayAceQ() throws IOException {
+    public  void DisplayAceQ() throws IOException {
         game_thread.send_game_message("The slot added is now solid based only on ACE rules.\n"
                 + "gDo you want to make it officially solid as it is? (Y/N)\n"
                 + "gDoing so will make it so no more cards can be added to that slot.\n");
     }
 
     // Output to user
-    public static void DisplayReplayQ() throws IOException {
+    public  void DisplayReplayQ() throws IOException {
         game_thread.send_game_message("Do you want to play again? (Y/N)\n");
     }
 
-    public static boolean isNumeric(String str) {
+    public  boolean isNumeric(String str) {
         try {
             Integer.parseInt(str);
             return true;
@@ -202,18 +202,16 @@ public class Cards_Main implements Runnable {
         }
     }
 
-    public static int GetAnOption() throws IOException {
+    public  int GetAnOption() throws IOException {
         int ans = -2;
         while (ans == -2) {
             try {
-
-                String temp = game_thread.get_from_client();
                 try {
-                    while (!isNumeric(game_thread.get_from_client()) && temp.equals(game_thread.get_from_client())) {
+                    while (game_thread.get_from_client().equals("_")) {
                         Thread.sleep(1000);
                     }
                     ans = Integer.parseInt(game_thread.get_from_client());
-                    game_thread.in_message("a");
+                    game_thread.in_message("_");
                 } catch (Exception er) {
 
                 }
@@ -227,7 +225,7 @@ public class Cards_Main implements Runnable {
             if (ans < 0 || ans > 2) {
                 // Output to user
                 game_thread.send_game_message("Please, input a single NUMBER from the list. (0-2)\n");
-                game_thread.in_message("a");
+                game_thread.in_message("_");
                 ans = -2;
             } else if (ans == 2) {
                 if (powerChips == 0) {
@@ -243,20 +241,19 @@ public class Cards_Main implements Runnable {
         return ans;
     }
 
-    public static int GetASlot() throws IOException {
+    public  int GetASlot() throws IOException {
         int ans = -2;
 
         while (ans == -2) {
             try {
-                String temp = game_thread.get_from_client();
                 try {
-                    while (!isNumeric(game_thread.get_from_client()) && temp.equals(game_thread.get_from_client())) {
+                    while (game_thread.get_from_client().equals("_")) {
                         Thread.sleep(1000);
                     }
                     ans = Integer.parseInt(game_thread.get_from_client());
-                    game_thread.in_message("a");
+                    game_thread.in_message("_");
                 } catch (Exception er) {
-
+                    game_thread.in_message("_");
                 }
             } catch (InputMismatchException e) {
                 // Output to user
@@ -287,17 +284,17 @@ public class Cards_Main implements Runnable {
         return ans;
     }
 
-    public static char GetAceQ() throws IOException {
+    public  char GetAceQ() throws IOException {
         String ans = null;
 
         while (ans == null) {
             try {
-                String temp = game_thread.get_from_client();
                 try {
-                    while (isNumeric(game_thread.get_from_client()) && temp.equals(game_thread.get_from_client())) {
+                    while (game_thread.get_from_client().equals("_")) {
                         Thread.sleep(1000);
                     }
                     ans = game_thread.get_from_client();
+                    game_thread.in_message("_");
                 } catch (Exception er) {
 
                 }
@@ -325,17 +322,17 @@ public class Cards_Main implements Runnable {
         }
     }
 
-    public static char GetReplay() throws IOException {
+    public  char GetReplay() throws IOException {
         String ans = null;
 
         while (ans == null) {
             try {
-                String temp = game_thread.get_from_client();
                 try {
-                    while (isNumeric(game_thread.get_from_client()) && temp.equals(game_thread.get_from_client())) {
+                    while (!game_thread.get_from_client().equals("_")) {
                         Thread.sleep(1000);
                     }
                     ans = game_thread.get_from_client();
+                    game_thread.in_message("_");
                 } catch (Exception er) {
 
                 }
@@ -363,7 +360,7 @@ public class Cards_Main implements Runnable {
         }
     }
 
-    public static void ResetGame() {
+    public  void ResetGame() {
         powerChips = 3;
 
         deck.ResetDeck();
@@ -375,7 +372,7 @@ public class Cards_Main implements Runnable {
         }
     }
 
-    public static void StartBonus() {
+    public  void StartBonus() {
         Card card;
 
         ResetGame();
@@ -389,7 +386,7 @@ public class Cards_Main implements Runnable {
         }
     }
 
-    public static boolean PlayGame() throws IOException {
+    public  boolean PlayGame() throws IOException {
         Card current;
         int answer;
         char aceAns;

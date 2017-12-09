@@ -20,7 +20,7 @@ public class GameThread implements Runnable {
 
     private Socket Cli_socket;
     private DataOutputStream to_client;
-    private Object game_class;
+    private Cards_Main game_class;
     private String current_game = "", from_client = "_";
     private boolean game_selected = false;
     private String game_state = "select";

@@ -63,11 +63,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // defining the different compnents of the JFrame
         //Text areas and scrolling capability
-        game_text = new JTextArea(25, 42);
+        game_text = new JTextArea(20, 42);
         game_text.setEditable(false);
         game_text.setLineWrap(true);
         scroll_game = new JScrollPane(game_text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        chat_text = new JTextArea(25, 33);
+        chat_text = new JTextArea(20, 33);
         chat_text.append("Welcome to the Chat!\n");
         chat_text.setEditable(false);
         chat_text.setLineWrap(true);

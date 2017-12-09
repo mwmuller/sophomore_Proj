@@ -21,8 +21,6 @@ public class ClientThread extends JFrame implements Runnable {
     private boolean game_run = false;
     private Socket Cli_socket;
     private GameThread run_games;
-    private String current_Game;
-    private DataOutputStream to_game_client;
     protected String[] game_names = {"snake", "code", "sticks", "cards"};
     protected BufferedReader from_client;
     // private DatagramPacket rec_pack;
