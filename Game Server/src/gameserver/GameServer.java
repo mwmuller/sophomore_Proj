@@ -160,10 +160,9 @@ public class GameServer {
         for (int i = 0; i < connected; i++) {
             try {
                 if (Clients_arr[i].get_usernm().equals(usernm)) {
-                    update_clients_box('r', Clients_arr[i]);
+                    //update_clients_box('r', Clients_arr[i]);
                     to_client = new DataOutputStream((Clients_arr[i].get_socket().getOutputStream()));
                     to_client.writeBytes("k\n");
-                    remove_client(i);
                 }
             } catch (Exception e) {
 
