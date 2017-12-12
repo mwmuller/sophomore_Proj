@@ -233,8 +233,9 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
         }
     }
 
-    private void kicked() {
+    private void kicked() throws IOException {
         this.setVisible(false);
+        serv_socket.close();
         JOptionPane warning = new JOptionPane("You Have been kicked from the server!", JOptionPane.WARNING_MESSAGE, JOptionPane.OK_OPTION);
         JOptionPane.showMessageDialog(warning, "You have been kicked");
         System.exit(-1);
