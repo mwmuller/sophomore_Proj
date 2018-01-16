@@ -5,6 +5,7 @@
  */
 package gameclient;
 
+import Arena.TwentyOneSticks;
 import HolyCode.HolyCode;
 import java.io.*;
 import java.net.*;
@@ -28,6 +29,7 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
     private BufferedReader from_server;
     private int port;
     public HolyCode holy;
+    public TwentyOneSticks arena;
     protected InetAddress serv_ip;
     protected String[] cli_ip;
     protected String my_ip;
@@ -255,9 +257,11 @@ public class ServerThread extends JFrame implements Runnable, ActionListener {
                     break;
                 case "holy":
                     curr_game = "holy";
-                    //to_server.writeBytes("g999\n");
                     holy = new HolyCode(this);
                     break;
+                case "sticks":
+                    curr_game = "sticks";
+                    arena = new TwentyOneSticks(this);
                 default:
                     game_text.append(msg + "\n");
                     break;
