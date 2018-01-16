@@ -7,6 +7,7 @@ package project1;
 
 import java.util.Random;
 import java.util.*;
+import java.io.*;
 
 /**
  *
@@ -14,9 +15,11 @@ import java.util.*;
  */
 public class Project1 {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException{
+        long start, end, time;
         int[] N_size = {1000, 5000, 10000, 20000, 50000, 100000};
         int[] rand_nums_arr;
+        FileWriter file = new FileWriter("Times.txt", true);
         Scanner in = new Scanner(System.in);
         int selection = 0;
         System.out.println("Which Program would you like to run?\n"
@@ -27,23 +30,45 @@ public class Project1 {
                 + "Selection: ");
         selection = Integer.parseInt(in.nextLine());
         for (int i = 0; i < N_size.length; i++) {
-            rand_nums_arr = fillArray(N_size[1]);
+            rand_nums_arr = fillArray(N_size[i]);
             switch (selection) {
                 case 1:
-                    
+                    start = System.currentTimeMillis();
                     System.out.println(MaxsubSlow(rand_nums_arr));
+                    end = System.currentTimeMillis();
+                    time = end - start;
+                    if( i == 0){
+                        file.write("Times for Slow Algorithm:\r\n");
+                    }
+                    file.write("N = " + N_size[i] + "\r\nComputation Time: " + time + " ms\r\n");
                     break;
                 case 2:
-                    MaxsubFaster(rand_nums_arr);
+                    start = System.currentTimeMillis();
+                    System.out.println(MaxsubFaster(rand_nums_arr));
+                    end = System.currentTimeMillis();
+                    time = end - start;
+                    if( i == 0){
+                        file.write("Times for Slow Algorithm:\r\n");
+                    }
+                    file.write("N = " + N_size[i] + "\r\nComputation Time: " + time + " ms\r\n");
                     break;
                 case 3:
-                    MaxsubFastest(rand_nums_arr);
+                    start = System.currentTimeMillis();
+                    System.out.println(MaxsubFastest(rand_nums_arr));
+                    end = System.currentTimeMillis();
+                    time = end - start;
+//                    if( i == 0){
+//                        file.write("Times for Fastest Algorithm:\r\n");
+//                    }
+//                    file.write("N = " + N_size[i] + "\r\nComputation Time: " + time + " ms\r\n");
+                    
                     break;
                 default:
                     // nothing
                     break;
             }
         }
+        file.close();
     }
 
     private static int[] fillArray(int n) {
@@ -59,12 +84,12 @@ public class Project1 {
     private static int MaxsubSlow(int[] A) {
         int max = 0;
         int s;
-        for(int j = 0; j < A.length; j++){
-            for(int k = j; k < A.length; k++){
+        for (int j = 0; j < A.length; j++) {
+            for (int k = j; k < A.length; k++) {
                 s = 0;
-                for(int i = j; i < k; i++){
+                for (int i = j; i < k; i++) {
                     s = s + A[i];
-                    if(s > max){
+                    if (s > max) {
                         max = s;
                     }
                 }
@@ -74,15 +99,38 @@ public class Project1 {
     }
 
     private static int MaxsubFaster(int[] A) {
-        int[] pre_sum = new int[A.length];
-        for(int i = 0; i < A.length; i++){
-            
+        int n = A.length;
+        int[] S = new int[n];
+        int s;
+        int m;
+        S[0] = 0;
+        for (int i = 1; i < n; i++) {
+            S[i] = S[i - 1] + A[i];
         }
-        return 0;
+        m = 0;
+        for (int j = 1; j < n; j++) {
+            for (int k = j; k < n; k++) {
+                s = S[k] - S[j - 1];
+                if (s > m) {
+                    m = s;
+                }
+            }
+        }
+        return m;
     }
 
     private static int MaxsubFastest(int[] A) {
-
-        return 0;
+        int n = A.length;
+        int[] M = new int[n];
+        int m;
+        M[0] = 0;
+        for(int t = 1; t < n; t++){
+            M[t] = Integer.max(0, M[t-1] + A[t]);
+        }
+        m = 0;
+        for(int t = 1; t < n; t++){
+            m = Integer.max(m, M[t]);
+        }
+        return m;
     }
 }
