@@ -17,7 +17,7 @@ public class Project1 {
 
     public static void main(String[] args) throws IOException{
         long start, end, time;
-        int[] N_size = {1000, 5000, 10000, 20000, 50000, 100000};
+        int[] N_size = {1000, 5000, 10000, 20000, 50000, 100000, 1000000, 10000000};
         int[] rand_nums_arr;
         FileWriter file = new FileWriter("Times.txt", true);
         Scanner in = new Scanner(System.in);
@@ -57,10 +57,10 @@ public class Project1 {
                     System.out.println(MaxsubFastest(rand_nums_arr));
                     end = System.currentTimeMillis();
                     time = end - start;
-//                    if( i == 0){
-//                        file.write("Times for Fastest Algorithm:\r\n");
-//                    }
-//                    file.write("N = " + N_size[i] + "\r\nComputation Time: " + time + " ms\r\n");
+                    if( i == 0){
+                        file.write("Times for Fastest Algorithm:\r\n");
+                    }
+                    file.write("N = " + N_size[i] + "\r\nComputation Time: " + time + " ms\r\n");
                     
                     break;
                 default:

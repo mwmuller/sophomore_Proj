@@ -1,4 +1,4 @@
-Times for Slow Algorithm:
+Times for Fast Algorithm:
 N = 1000
 Computation Time: 4 ms
 N = 5000
@@ -11,6 +11,19 @@ N = 50000
 Computation Time: 554 ms
 N = 100000
 Computation Time: 2093 ms
+Times for Slow Algorithm:
+N = 1000
+Computation Time: 332 ms
+N = 5000
+Computation Time: 42264 ms
+N = 10000
+Computation Time: 50439 ms
+N = 20000
+Computation Time: 399695 ms
+N = 50000
+Computation Time: 6505407 ms
+N = 100000
+Computation Time: 70364775 ms
 Times for Fastest Algorithm:
 N = 1000
 Computation Time: 0 ms
@@ -19,8 +32,25 @@ Computation Time: 0 ms
 N = 10000
 Computation Time: 1 ms
 N = 20000
-Computation Time: 2 ms
+Computation Time: 1 ms
 N = 50000
-Computation Time: 2 ms
+Computation Time: 1 ms
 N = 100000
 Computation Time: 1 ms
+Times for Fastest Algorithm:
+N = 1000
+Computation Time: 1 ms
+N = 5000
+Computation Time: 1 ms
+N = 10000
+Computation Time: 1 ms
+N = 20000
+Computation Time: 1 ms
+N = 50000
+Computation Time: 1 ms
+N = 100000
+Computation Time: 1 ms
+N = 1000000
+Computation Time: 4 ms
+N = 10000000
+Computation Time: 38 ms
