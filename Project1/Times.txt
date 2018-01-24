@@ -23,20 +23,7 @@ Computation Time: 399695 ms
 N = 50000
 Computation Time: 6505407 ms
 N = 100000
-Computation Time: 70364775 ms
-Times for Fastest Algorithm:
-N = 1000
-Computation Time: 0 ms
-N = 5000
-Computation Time: 0 ms
-N = 10000
-Computation Time: 1 ms
-N = 20000
-Computation Time: 1 ms
-N = 50000
-Computation Time: 1 ms
-N = 100000
-Computation Time: 1 ms
+Computation Time: 56023582 ms
 Times for Fastest Algorithm:
 N = 1000
 Computation Time: 1 ms

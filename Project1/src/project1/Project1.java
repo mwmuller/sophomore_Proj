@@ -15,7 +15,7 @@ import java.io.*;
  */
 public class Project1 {
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         long start, end, time;
         int[] N_size = {1000, 5000, 10000, 20000, 50000, 100000, 1000000, 10000000};
         int[] rand_nums_arr;
@@ -29,7 +29,7 @@ public class Project1 {
                 + "(4) End\n"
                 + "Selection: ");
         selection = Integer.parseInt(in.nextLine());
-        for (int i = 0; i < N_size.length; i++) {
+        for (int i = 0; i < 3; i++) {
             rand_nums_arr = fillArray(N_size[i]);
             switch (selection) {
                 case 1:
@@ -37,7 +37,7 @@ public class Project1 {
                     System.out.println(MaxsubSlow(rand_nums_arr));
                     end = System.currentTimeMillis();
                     time = end - start;
-                    if( i == 0){
+                    if (i == 0) {
                         file.write("Times for Slow Algorithm:\r\n");
                     }
                     file.write("N = " + N_size[i] + "\r\nComputation Time: " + time + " ms\r\n");
@@ -47,21 +47,25 @@ public class Project1 {
                     System.out.println(MaxsubFaster(rand_nums_arr));
                     end = System.currentTimeMillis();
                     time = end - start;
-                    if( i == 0){
+                    if (i == 0) {
                         file.write("Times for Slow Algorithm:\r\n");
                     }
                     file.write("N = " + N_size[i] + "\r\nComputation Time: " + time + " ms\r\n");
+                    if (i == 2) {
+
+                        file.close();
+                    }
                     break;
                 case 3:
                     start = System.currentTimeMillis();
                     System.out.println(MaxsubFastest(rand_nums_arr));
                     end = System.currentTimeMillis();
                     time = end - start;
-                    if( i == 0){
+                    if (i == 0) {
                         file.write("Times for Fastest Algorithm:\r\n");
                     }
                     file.write("N = " + N_size[i] + "\r\nComputation Time: " + time + " ms\r\n");
-                    
+
                     break;
                 default:
                     // nothing
@@ -124,11 +128,11 @@ public class Project1 {
         int[] M = new int[n];
         int m;
         M[0] = 0;
-        for(int t = 1; t < n; t++){
-            M[t] = Integer.max(0, M[t-1] + A[t]);
+        for (int t = 1; t < n; t++) {
+            M[t] = Integer.max(0, M[t - 1] + A[t]);
         }
         m = 0;
-        for(int t = 1; t < n; t++){
+        for (int t = 1; t < n; t++) {
             m = Integer.max(m, M[t]);
         }
         return m;
