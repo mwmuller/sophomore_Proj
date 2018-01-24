@@ -1,0 +1,104 @@
+C:\Users\mike>cd .\documents
+
+C:\Users\mike\Documents>cd github
+
+C:\Users\mike\Documents\GitHub>cd CSI3370
+
+C:\Users\mike\Documents\GitHub\CSI3370>git log
+commit e383cde1b85427ae1f472769ba752c228708f522 (HEAD -> master, origin/master)
+Author: mwmuller@oakland.edu <mwmuller@github.com>
+Date:   Wed Jan 24 17:09:06 2018 -0500
+
+    Finalized and optomized the program to be more efficient
+
+commit b7f63d7725eae8b4460703dffa38db2ba6a6d106 (origin/implementation)
+Author: mwmuller <mwmuller@oakland.edu>
+Date:   Mon Jan 22 17:44:59 2018 -0500
+
+    Finished the second method and tested
+
+commit 04f860b6a6215a27d08546b8b46599b09de7052e
+Author: mwmuller <mwmuller@oakland.edu>
+Date:   Mon Jan 22 17:44:15 2018 -0500
+
+    Rolled back to the first method finished
+
+commit 05adecf0180a755939709ab3c43254f900d9bf09
+Author: mwmuller <mwmuller@oakland.edu>
+Date:   Mon Jan 22 17:37:47 2018 -0500
+
+    Finished implementing the functions to the code and the program works as described in the requirements
+:...skipping...
+commit e383cde1b85427ae1f472769ba752c228708f522 (HEAD -> master, origin/master)
+Author: mwmuller@oakland.edu <mwmuller@github.com>
+Date:   Wed Jan 24 17:09:06 2018 -0500
+
+    Finalized and optomized the program to be more efficient
+
+commit b7f63d7725eae8b4460703dffa38db2ba6a6d106 (origin/implementation)
+Author: mwmuller <mwmuller@oakland.edu>
+Date:   Mon Jan 22 17:44:59 2018 -0500
+
+    Finished the second method and tested
+
+commit 04f860b6a6215a27d08546b8b46599b09de7052e
+Author: mwmuller <mwmuller@oakland.edu>
+Date:   Mon Jan 22 17:44:15 2018 -0500
+
+    Rolled back to the first method finished
+
+commit 05adecf0180a755939709ab3c43254f900d9bf09
+Author: mwmuller <mwmuller@oakland.edu>
+Date:   Mon Jan 22 17:37:47 2018 -0500
+
+    Finished implementing the functions to the code and the program works as described in the requirements
+
+commit 0d714083376edef5350120012b2c4522fdef33b0 (origin/Interface)
+Author: mwmuller <mwmuller@oakland.edu>
+Date:   Mon Jan 22 17:36:12 2018 -0500
+
+    Added the .java file and the functions
+
+commit ad7742f8ba99cf9b560349152eafaa9350378474
+Author: mwmuller <mwmuller@oakland.edu>
+Date:   Mon Jan 22 17:33:12 2018 -0500
+
+    Adding the README.md file
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+C:\Users\mike\Documents\GitHub\CSI3370>
