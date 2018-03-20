@@ -8,12 +8,10 @@ package gameclient;
 import javax.swing.*;
 import java.net.*;
 import java.io.*;
-
 class GameClient {
     private static Socket client_socket, test_sock;
     private static ServerThread serv_thread;
     private static String ip = "";
-    static DatagramPacket usernm_send;
     protected static InetAddress serv_inet;
 
     public static void main(String[] args) throws Exception {
@@ -39,7 +37,7 @@ class GameClient {
 //            client_socket.send(usernm_send);
 //            client_socket.connect(serv_inet, port);
             client_socket = new Socket(ip, 1234);
-            DataOutputStream to_serv = new DataOutputStream((client_socket.getOutputStream()));
+            ObjectOutputStream to_serv = new ObjectOutputStream((client_socket.getOutputStream()));
             to_serv.writeBytes(username + "\n");
             serv_thread = new ServerThread(client_socket, username, serv_inet, port);
         } catch (Exception e) {

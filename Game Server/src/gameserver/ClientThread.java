@@ -11,7 +11,6 @@ import java.net.*;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
-
 /**
  *
  * @author Michael Muller
@@ -74,14 +73,16 @@ public class ClientThread extends JFrame implements Runnable {
             game_serv.personal_game_mess(this, "_reset_\n");
         }
     }
-
+    public void handleMessages(){
+        
+    }
     @Override
     public void run() {
         String c_mess, s_mess;
         try { // Gets messages from the clients
-            from_client = new BufferedReader(new InputStreamReader(Cli_socket.getInputStream()));
+            from_client = new BufferedReader(new InputStream(Cli_socket.getInputStream()));
             // reads in the username if they join the chat
-            Username = from_client.readLine();
+            
             game_serv.check_nm(this);
             game_serv.echo_chat(this, Username + " has joined the Chat", "j");
             game_serv.update_clients_box('a', this);

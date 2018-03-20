@@ -16,7 +16,7 @@ public class GameServer {
     private static int connected = 0, max_index = 0;
     protected static String[] Inet_addr;
     // protected static DatagramPacket rec_pack, send_pack;
-    protected static DataOutputStream to_client;
+    protected static ObjectOutputStream to_client;
     // protected static DatagramSocket ssock;
     protected static ServerSocket ssock;
     protected static InetAddress client_ip;
@@ -161,7 +161,7 @@ public class GameServer {
             try {
                 if (Clients_arr[i].get_usernm().equals(usernm)) {
                     //update_clients_box('r', Clients_arr[i]);
-                    to_client = new DataOutputStream((Clients_arr[i].get_socket().getOutputStream()));
+                    to_client = new ObjectOutputStream((Clients_arr[i].get_socket().getOutputStream()));
                     to_client.writeBytes("k\n");
                 }
             } catch (Exception e) {
@@ -200,7 +200,7 @@ public class GameServer {
         }
 
         for (int i = 0; i < connected; i++) {
-            to_client = new DataOutputStream((Clients_arr[i].get_socket().getOutputStream()));
+            to_client = new ObjectOutputStream((Clients_arr[i].get_socket().getOutputStream()));
             if (client != Clients_arr[i] || joined_chat.equals("m")) {
                 try {
                     if (joined_chat.equals("c")) { // A chat message
