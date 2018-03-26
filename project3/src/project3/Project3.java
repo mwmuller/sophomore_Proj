@@ -21,11 +21,9 @@ public class Project3 {
 
         // Create Graph Object
         Graph graph = new Graph(grFile);
-        Path paths = new Path(graph, 0);
+        Path paths = new Path(graph, startVert);
         // Go through the relaxation process taking closest vertex from PQ
         Integer w;
-        
-        graph.PrintGraph();
         while ((w = paths.getNextVertex()) != null) {
             paths.applyRelaxation(w);
         }

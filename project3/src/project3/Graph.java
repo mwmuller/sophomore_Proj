@@ -76,23 +76,5 @@ public class Graph {
         }
     }
 
-    // Process the line of text
 
-    void PrintGraph ()
-    {
-        // Go through the Adjacency Matrix
-
-        for (int vert = 1; vert <= mGraph.size(); vert++)
-        {
-           LinkedList<Vertex> adj = mGraph.get(vert);
-           System.out.print ("From Vertex: " + vert);
-           for (Iterator<Vertex> vertEnum = adj.iterator();
-                   vertEnum.hasNext();)
-            {
-                Vertex     toVert = vertEnum.next();
-                System.out.print (" " + toVert.mVertId + " (" + toVert.mDistance + ") ");
-            }
-            System.out.println();
-        }
-    }
 }
